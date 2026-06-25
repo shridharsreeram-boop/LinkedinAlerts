@@ -62,6 +62,26 @@ Google Sheet  ──sync_signups.py──►  data/subscribers.json
 | [Resend](https://resend.com/) | Transactional email | 100 emails/day free |
 | GitHub | Hosting, scheduling, Pages | Free for public repos |
 
+### 1b. (Optional) Use the setup wizard instead of manual secret entry
+
+`scripts/setup_wizard.py` automates the credential-validation and
+GitHub-secrets part of setup. Run it **locally on your own machine**
+(never on a shared server) after installing the
+[GitHub CLI](https://cli.github.com) and running `gh auth login`:
+
+```bash
+pip install requests --break-system-packages   # or use a venv
+python scripts/setup_wizard.py --repo yourusername/job-alert-pipeline
+```
+
+It will prompt you (hidden input, nothing written to disk) for each API
+key, test it with a real request before accepting it, and push it
+straight into your repo's GitHub Secrets using `gh secret set` — the
+same client-side-encrypted mechanism GitHub's own docs recommend. It
+cannot do the steps that require clicking through Google/GitHub's own
+UI (creating the Form, enabling Pages) — it will print those steps for
+you at the end.
+
 ### 2. Create the signup form
 - Make a Google Form with fields: **Name, Email, Job Title, Location, Country Code, Alert Duration (days)**
 - Link it to a Google Sheet (Form automatically does this)
