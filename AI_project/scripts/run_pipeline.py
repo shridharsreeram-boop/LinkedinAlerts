@@ -4,8 +4,11 @@ Job Alert Pipeline
 ------------------
 1. Reads subscribers from data/subscribers.json
 2. Removes expired subscriptions
-3. For each active subscriber, fetches new job postings (Adzuna API)
-   matching their title + location
+3. For each active subscriber, fetches new job postings matching their
+   title + location from TWO sources:
+     - Sweden's free, official JobTech/Platsbanken API (no key needed)
+     - Adzuna API, looped across ~19 supported countries (Adzuna has no
+       Sweden coverage, so this catches everything else)
 4. Filters out jobs already seen (data/seen_jobs.json)
 5. Uses Claude API to score relevance of each new job to the subscriber's
    stated title/keywords
@@ -59,6 +62,42 @@ def is_expired(subscriber):
     return datetime.date.today() > datetime.date.fromisoformat(end_date)
 
 
+def fetch_jobs_sweden(title, location, results=20):
+    """Fetch job postings from Sweden's free, official JobTech/Platsbanken API.
+    No API key required. Uses free-text search combining title + location.
+    Results are normalized to match Adzuna's job dict shape so the rest of
+    the pipeline (scoring, email, dedup) works unchanged."""
+    query = f"{title} {location}".strip()
+    try:
+        resp = requests.get(
+            "https://jobsearch.api.jobtechdev.se/search",
+            params={"q": query, "limit": results},
+            headers={"accept": "application/json"},
+            timeout=20,
+        )
+        resp.raise_for_status()
+        hits = resp.json().get("hits", [])
+        normalized = []
+        for h in hits:
+            employer = h.get("employer") or {}
+            workplace = h.get("workplace_address") or {}
+            description = h.get("description") or {}
+            application = h.get("application_details") or {}
+            normalized.append({
+                "id": f"se-{h.get('id')}",
+                "title": h.get("headline", "Untitled role"),
+                "company": {"display_name": employer.get("name", "Unknown company")},
+                "location": {"display_name": workplace.get("municipality", "Sweden")},
+                "description": description.get("text", "") or "",
+                "redirect_url": application.get("url") or h.get("webpage_url", "#"),
+                "_country": "se",
+            })
+        return normalized
+    except Exception as e:
+        print(f"    [warn] Sweden (JobTech) fetch failed: {e}")
+        return []
+
+
 def fetch_jobs(title, location, countries=None, results_per_country=10):
     """Fetch recent job postings from the Adzuna API across multiple countries."""
     if not ADZUNA_APP_ID or not ADZUNA_APP_KEY:
@@ -86,7 +125,7 @@ def fetch_jobs(title, location, countries=None, results_per_country=10):
             # silently skip countries that error (e.g. rate limits) - others still proceed
         except Exception as e:
             print(f"    [warn] fetch failed for country '{country}': {e}")
-        time.sleep(0.3)  # be gentle on rate limits across 19 sequential calls
+        time.sleep(0.3)  # be gentle on rate limits across many sequential calls
     return all_results
 
 
@@ -198,10 +237,11 @@ def main():
 
         title = sub.get("job_title", "")
         location = sub.get("location", "")
-        print(f"Checking jobs for {email}: '{title}' in '{location}' (searching all countries)")
+        print(f"Checking jobs for {email}: '{title}' in '{location}' (Sweden + all Adzuna countries)")
 
         try:
-            jobs = fetch_jobs(title, location)
+            jobs = fetch_jobs_sweden(title, location)
+            jobs += fetch_jobs(title, location)
         except Exception as e:
             print(f"  [error] fetch failed for {email}: {e}")
             run_summary["results"].append({"email": email, "status": "fetch_error", "detail": str(e)})
