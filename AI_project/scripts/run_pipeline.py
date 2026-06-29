@@ -59,24 +59,35 @@ def is_expired(subscriber):
     return datetime.date.today() > datetime.date.fromisoformat(end_date)
 
 
-def fetch_jobs(title, location, country=ADZUNA_COUNTRY, results=20):
-    """Fetch recent job postings from the Adzuna API."""
+def fetch_jobs(title, location, countries=None, results_per_country=10):
+    """Fetch recent job postings from the Adzuna API across multiple countries."""
     if not ADZUNA_APP_ID or not ADZUNA_APP_KEY:
         raise RuntimeError("Missing ADZUNA_APP_ID / ADZUNA_APP_KEY environment variables")
 
-    url = f"https://api.adzuna.com/v1/api/jobs/{country}/search/1"
-    params = {
-        "app_id": ADZUNA_APP_ID,
-        "app_key": ADZUNA_APP_KEY,
-        "what": title,
-        "where": location,
-        "results_per_page": results,
-        "sort_by": "date",
-        "content-type": "application/json",
-    }
-    resp = requests.get(url, params=params, timeout=30)
-    resp.raise_for_status()
-    return resp.json().get("results", [])
+    countries = countries or ADZUNA_COUNTRIES
+    all_results = []
+    for country in countries:
+        url = f"https://api.adzuna.com/v1/api/jobs/{country}/search/1"
+        params = {
+            "app_id": ADZUNA_APP_ID,
+            "app_key": ADZUNA_APP_KEY,
+            "what": title,
+            "where": location,
+            "results_per_page": results_per_country,
+            "sort_by": "date",
+            "content-type": "application/json",
+        }
+        try:
+            resp = requests.get(url, params=params, timeout=20)
+            if resp.status_code == 200:
+                for job in resp.json().get("results", []):
+                    job["_country"] = country
+                    all_results.append(job)
+            # silently skip countries that error (e.g. rate limits) - others still proceed
+        except Exception as e:
+            print(f"    [warn] fetch failed for country '{country}': {e}")
+        time.sleep(0.3)  # be gentle on rate limits across 19 sequential calls
+    return all_results
 
 
 def score_relevance(job, subscriber_keywords):
@@ -187,11 +198,10 @@ def main():
 
         title = sub.get("job_title", "")
         location = sub.get("location", "")
-        country = sub.get("country_code", ADZUNA_COUNTRY)
-        print(f"Checking jobs for {email}: '{title}' in '{location}'")
+        print(f"Checking jobs for {email}: '{title}' in '{location}' (searching all countries)")
 
         try:
-            jobs = fetch_jobs(title, location, country=country)
+            jobs = fetch_jobs(title, location)
         except Exception as e:
             print(f"  [error] fetch failed for {email}: {e}")
             run_summary["results"].append({"email": email, "status": "fetch_error", "detail": str(e)})
