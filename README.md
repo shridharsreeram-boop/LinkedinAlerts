@@ -1,29 +1,39 @@
 # Job Alert Pipeline 🔔
 
-A fully automated, **100% free**, multi-user job alert system. Subscribers sign
-up with a target job title, location, and an alert duration. The pipeline
-checks for new matching job postings on a schedule, uses an LLM to score how
-relevant each posting actually is, and emails a digest of the best matches —
-automatically stopping once the subscriber's chosen period ends.
+A free, automated, multi-user job alert system. Subscribers sign up with a
+target job title, location, and an alert duration. A scheduled pipeline
+checks for new matching job postings, uses Claude to score how relevant each
+one actually is, and emails a digest of the best matches — automatically
+expiring the subscription once the chosen period ends.
 
-Built to run entirely on free tiers: **GitHub Actions** (compute/scheduling),
-**GitHub Pages** (signup page + dashboard), **Adzuna API** (job data),
-**Claude API** (relevance scoring), and **Resend** (email delivery).
+Built entirely on free-tier infrastructure: **GitHub Actions** (compute and
+scheduling), **GitHub Pages** (signup page + live dashboard), **Adzuna API**
+(job data for ~19 countries), **Sweden's official JobTech/Platsbanken API**
+(free, no key required), **Claude API** (relevance scoring), and **Resend**
+(email delivery).
+
+🔗 **Live signup page:** https://shridharsreeram-boop.github.io/LinkedinAlerts/
+🔗 **Live dashboard:** https://shridharsreeram-boop.github.io/LinkedinAlerts/dashboard.html
+🔗 **Repo:** https://github.com/shridharsreeram-boop/LinkedinAlerts
 
 ---
 
 ## Why this project
 
-Job boards send a firehose of postings, most irrelevant. This pipeline:
-1. Pulls fresh postings for a specific title + location
-2. Filters out anything already seen
-3. Uses an LLM to actually judge *relevance*, not just keyword matching
-4. Emails only what's worth your time
-5. Expires automatically — no stale subscriptions
+Job boards send a firehose of postings, most irrelevant, and most aggregator
+sites don't cover Sweden at all. This pipeline:
 
-It's also a self-contained demonstration of: API integration, scheduled
-automation, AI-assisted filtering, state management (dedup across runs),
-and a simple ops dashboard — built without paying for any infrastructure.
+1. Pulls fresh postings for a specific title + location from **two** sources
+   so coverage spans Sweden and ~19 other countries
+2. Filters out anything already seen across runs
+3. Uses an LLM to judge actual *relevance*, not just keyword overlap
+4. Emails only what's worth the subscriber's time
+5. Expires automatically — no stale subscriptions sitting around forever
+
+It's also a self-contained demonstration of: dual-API integration, scheduled
+automation, AI-assisted filtering, cross-run state management (dedup), a
+self-healing signup flow (resubmitting updates your preferences), and a
+simple public ops dashboard — built without paying for any infrastructure.
 
 ---
 
@@ -33,34 +43,51 @@ and a simple ops dashboard — built without paying for any infrastructure.
 Signup page (GitHub Pages)
         │  (Google Form)
         ▼
-Google Sheet  ──sync_signups.py──►  data/subscribers.json
-                                            │
-                          GitHub Actions cron (every 6h)
-                                            │
-                                            ▼
-                                   scripts/run_pipeline.py
-                                            │
-                ┌───────────────────────────┼───────────────────────────┐
-                ▼                           ▼                           ▼
-        Adzuna API (fetch jobs)   Claude API (score relevance)   Resend API (send email)
-                │                           │                           │
-                └─────────────► data/seen_jobs.json, data/run_log.json ◄┘
-                                            │
-                                            ▼
-                          scripts/generate_dashboard.py → docs/dashboard.html
+Google Sheet ──sync_signups.py──► data/subscribers.json
+                                          │
+                       GitHub Actions cron (every 6h)
+                                          │
+                                          ▼
+                                scripts/run_pipeline.py
+                                          │
+        ┌─────────────────────────────────┼─────────────────────────────────┐
+        ▼                                 ▼                                 ▼
+JobTech/Platsbanken API          Adzuna API (looped across          Claude API
+(Sweden, free, no key)           ~19 supported countries)        (relevance scoring)
+        │                                 │                                 │
+        └───────────────► merged, deduped, scored results ◄─────────────────┘
+                                          │
+                                          ▼
+                              Resend API (email digest)
+                                          │
+                                          ▼
+                    data/seen_jobs.json, data/run_log.json
+                                          │
+                                          ▼
+                  scripts/generate_dashboard.py → docs/dashboard.html
 ```
+
+### Why two job sources
+Adzuna does not support Sweden as a country code at all (supported codes:
+`at, au, be, br, ca, ch, de, es, fr, gb, in, it, mx, nl, nz, pl, sg, us, za`).
+Rather than work around that gap, the pipeline calls Sweden's own free,
+official JobTech/Platsbanken API directly, and runs Adzuna in parallel across
+every country it does support. Results from both are merged, deduplicated,
+and scored identically.
 
 ---
 
 ## Setup (step by step)
 
 ### 1. Create free accounts / API keys
-| Service | Purpose | Free tier |
-|---|---|---|
-| [Adzuna API](https://developer.adzuna.com/) | Job search data | Free, generous limits |
-| [Anthropic Console](https://console.anthropic.com/) | Claude API for relevance scoring | Pay-as-you-go, low cost per call (or use the fallback neutral score if you skip this) |
-| [Resend](https://resend.com/) | Transactional email | 100 emails/day free |
-| GitHub | Hosting, scheduling, Pages | Free for public repos |
+
+| Service | Purpose | Free tier | Required? |
+|---|---|---|---|
+| [Adzuna API](https://developer.adzuna.com/) | Job data, ~19 countries | Free, generous limits | Yes |
+| Sweden's [JobTech/Platsbanken API](https://jobtechdev.se) | Job data, Sweden | Free, no signup/key needed | Built in, nothing to set up |
+| [Anthropic Console](https://console.anthropic.com/) | Relevance scoring | Pay-as-you-go, **requires adding billing credit** even for a tiny amount — without it every call returns a 400 and the pipeline falls back to a neutral score | Optional but recommended |
+| [Resend](https://resend.com/) | Email delivery | 100/day free, but **sandbox sender can only deliver to your own verified account email** until you verify a domain | Yes |
+| GitHub | Hosting, scheduling, Pages | Free for public repos | Yes |
 
 ### 1b. (Optional) Use the setup wizard instead of manual secret entry
 
@@ -70,44 +97,58 @@ GitHub-secrets part of setup. Run it **locally on your own machine**
 [GitHub CLI](https://cli.github.com) and running `gh auth login`:
 
 ```bash
-pip install requests --break-system-packages   # or use a venv
+pip install requests
 python scripts/setup_wizard.py --repo yourusername/job-alert-pipeline
 ```
 
-It will prompt you (hidden input, nothing written to disk) for each API
-key, test it with a real request before accepting it, and push it
-straight into your repo's GitHub Secrets using `gh secret set` — the
-same client-side-encrypted mechanism GitHub's own docs recommend. It
-cannot do the steps that require clicking through Google/GitHub's own
-UI (creating the Form, enabling Pages) — it will print those steps for
-you at the end.
+It prompts for each API key with hidden input (nothing written to disk),
+validates it with a real test request before accepting it, and pushes it
+straight into GitHub Secrets via `gh secret set` — the same client-side
+encrypted mechanism GitHub's own docs recommend.
 
 ### 2. Create the signup form
-- Make a Google Form with fields: **Name, Email, Job Title, Location, Country Code, Alert Duration (days)**
-- Link it to a Google Sheet (Form automatically does this)
-- In the Sheet: **File → Share → Publish to web → CSV**, copy the URL
-- Update the form link in `docs/index.html`
+- Google Form with fields: **Name, Email, Job Title, Location, Country
+  Code, Alert Duration (days)**
+- Link it to a Sheet → **File → Share → Publish to web → CSV** → copy the URL
+- Set that URL as the `GOOGLE_SHEET_CSV_URL` secret
 
 ### 3. Configure GitHub repo secrets
-In **Settings → Secrets and variables → Actions**, add:
-- `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`
-- `ANTHROPIC_API_KEY`
-- `RESEND_API_KEY`
-- `ALERT_FROM_EMAIL` (a verified sender on Resend)
-- `GOOGLE_SHEET_CSV_URL` (from step 2)
+**Settings → Secrets and variables → Actions**:
+`ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `ANTHROPIC_API_KEY`, `RESEND_API_KEY`,
+`ALERT_FROM_EMAIL`, `GOOGLE_SHEET_CSV_URL`
 
 ### 4. Enable GitHub Pages
-**Settings → Pages → Source: `docs/` folder on `main` branch**
-
-Your signup page will be live at `https://<username>.github.io/<repo>/`
-and the dashboard at `.../dashboard.html`.
+If your `docs/` folder build fails with a Jekyll/SCSS error, switch
+**Settings → Pages → Source** to **GitHub Actions** and use a "Static HTML"
+deploy workflow pointing at `./docs` — this avoids Jekyll's default theme
+entirely, which otherwise tries (and fails) to compile a stylesheet that
+doesn't exist in a plain static site.
 
 ### 5. Enable the workflow
-The pipeline runs automatically every 6 hours via
-`.github/workflows/job-alert.yml`. You can also trigger it manually from
-the **Actions** tab (`workflow_dispatch`).
+Runs automatically every 6 hours via `.github/workflows/job-alert.yml`, or
+trigger manually from the **Actions** tab (`workflow_dispatch`).
 
 ---
+
+## Known limitations (intentional, documented tradeoffs)
+
+- **Single-recipient email delivery.** Resend's free sandbox sender
+  (`onboarding@resend.dev`) can only deliver to the email address that owns
+  the Resend account — this is an anti-spam safeguard, not a quota issue.
+  Sending to arbitrary subscribers requires verifying a real domain (DNS
+  records) in Resend, which costs a few dollars/year for a domain. This repo
+  currently runs single-recipient; multi-recipient is a documented next step,
+  not a missing feature.
+- **Relevance scoring requires Anthropic billing credit.** The API key alone
+  isn't enough — Plans & Billing needs an actual balance, or every scoring
+  call returns a 400 and the pipeline silently falls back to a flat neutral
+  score (still functional, just unscored).
+- **Adzuna has no Sweden coverage.** Solved here by adding Sweden's own
+  JobTech API as a second source rather than working around the gap with a
+  neighboring country code.
+- **Google's "publish to web" CSV can lag a few minutes** after a fresh form
+  submission. If a sync run shows stale data, it's almost always this caching
+  delay, not a code bug — re-running a few minutes later resolves it.
 
 ## Local testing
 
@@ -118,32 +159,10 @@ python scripts/run_pipeline.py
 python scripts/generate_dashboard.py
 ```
 
-Add a test subscriber manually to `data/subscribers.json`:
-```json
-[
-  {
-    "name": "Sriram",
-    "email": "you@example.com",
-    "job_title": "System Configuration Developer",
-    "location": "Gothenburg",
-    "country_code": "se",
-    "end_date": "2026-12-31"
-  }
-]
-```
-
----
-
-## Notes on legitimacy
-
-This intentionally does **not** scrape LinkedIn directly — that violates
-LinkedIn's Terms of Service. Instead it uses the Adzuna API, a legitimate
-job-aggregation service that indexes postings from many sources (including
-many that also appear on LinkedIn), which keeps the project both functional
-and compliant.
-
 ## Possible extensions
-- Swap Adzuna for additional aggregators and merge results
+- Verify a domain in Resend for genuine multi-recipient delivery
 - Add Slack/Telegram delivery alongside email
-- Add a "snooze" or "unsubscribe" link in each email
-- Store data in a free hosted DB (e.g. Supabase) instead of JSON files for easier multi-repo scaling
+- Add an unsubscribe link in each email
+- Move from JSON files to a free hosted DB (e.g. Supabase) for easier scaling
+- Add more country-specific official job APIs (e.g. other Nordic countries)
+  alongside JobTech, following the same pattern used for Sweden
