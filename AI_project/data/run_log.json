@@ -67,5 +67,16 @@
         "relevant_jobs_sent": 0
       }
     ]
+  },
+  {
+    "timestamp": "2026-06-29T10:43:15.031815",
+    "results": [
+      {
+        "email": "shridhar.sreeram@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0
+      }
+    ]
   }
 ]
