@@ -94,12 +94,8 @@ def fetch_jobs_sweden(title, location, results=20):
             })
         return normalized
     except Exception as e:
-        print(f"  [warn] relevance scoring failed: {e}")
-        try:
-            print(f"  [warn] response body: {resp.text}")
-        except Exception:
-            pass
-        return 7
+        print(f"    [warn] Sweden (JobTech) fetch failed: {e}")
+        return []
 
 
 def fetch_jobs(title, location, countries=None, results_per_country=10):
@@ -150,6 +146,7 @@ Description: {job.get('description', '')[:800]}
 On a scale of 0 to 10, how relevant is this job posting to the job seeker's interests?
 Respond with ONLY the number, nothing else."""
 
+    resp = None
     try:
         resp = requests.post(
             "https://api.anthropic.com/v1/messages",
@@ -170,6 +167,8 @@ Respond with ONLY the number, nothing else."""
         return int("".join(ch for ch in text if ch.isdigit())[:2] or "7")
     except Exception as e:
         print(f"  [warn] relevance scoring failed: {e}")
+        if resp is not None:
+            print(f"  [warn] response body: {resp.text}")
         return 7
 
 
