@@ -47,31 +47,41 @@ def main():
     rows = [{k.strip(): v.strip() for k, v in row.items()} for row in reader]
 
     subscribers = load_subscribers()
-    existing_emails = {s["email"] for s in subscribers}
+    by_email = {s["email"]: s for s in subscribers}
 
-    added = 0
+    # Keep only the LATEST row per email from the form (Google Forms appends new rows,
+    # so a resubmission with the same email means "update my preferences")
+    latest_by_email = {}
     for row in rows:
         email = row.get("Email", "").strip()
-        if not email or email in existing_emails:
-            continue
+        if email:
+            latest_by_email[email] = row
 
+    added, updated = 0, 0
+    for email, row in latest_by_email.items():
         duration_days = int(row.get("Alert Duration (days)", 30) or 30)
         end_date = (datetime.date.today() + datetime.timedelta(days=duration_days)).isoformat()
 
-        subscribers.append({
+        new_record = {
             "name": row.get("Name", "there").strip(),
             "email": email,
             "job_title": row.get("Job Title", "").strip(),
             "location": row.get("Location", "").strip(),
-            "country_code": row.get("Country Code", "se").strip().lower(),
+            "country_code": row.get("Country Code", "").strip().lower(),
             "end_date": end_date,
-            "signed_up": datetime.date.today().isoformat(),
-        })
-        existing_emails.add(email)
-        added += 1
+            "signed_up": by_email.get(email, {}).get("signed_up", datetime.date.today().isoformat()),
+        }
 
-    save_subscribers(subscribers)
-    print(f"Synced signups: {added} new subscriber(s) added.")
+        if email in by_email:
+            if by_email[email] != new_record:
+                updated += 1
+        else:
+            added += 1
+
+        by_email[email] = new_record
+
+    save_subscribers(list(by_email.values()))
+    print(f"Synced signups: {added} new subscriber(s) added, {updated} updated.")
 
 
 if __name__ == "__main__":
