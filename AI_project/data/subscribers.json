@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "name": "Sriram",
+    "email": "shridhar.sreeram@gmail.com",
+    "job_title": "Software Engineer",
+    "location": "Gothenburg",
+    "country_code": "se",
+    "end_date": "2026-07-01",
+    "signed_up": "2026-06-29"
+  }
+]

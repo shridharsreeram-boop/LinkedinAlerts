@@ -2,5 +2,15 @@
   {
     "timestamp": "2026-06-29T09:51:32.652548",
     "results": []
+  },
+  {
+    "timestamp": "2026-06-29T10:06:06.817027",
+    "results": [
+      {
+        "email": "shridhar.sreeram@gmail.com",
+        "status": "fetch_error",
+        "detail": "404 Client Error: Not Found for url: https://api.adzuna.com/v1/api/jobs/se/search/1?app_id=ebfac4f6&app_key=1d27e7da7606f85570c633a86d2bb56a&what=Software+Engineer&where=Gothenburg&results_per_page=20&sort_by=date&content-type=application%2Fjson"
+      }
+    ]
   }
 ]
