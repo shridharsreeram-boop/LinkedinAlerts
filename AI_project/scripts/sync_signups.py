@@ -43,7 +43,8 @@ def main():
 
     resp = requests.get(GOOGLE_SHEET_CSV_URL, timeout=30)
     resp.raise_for_status()
-    rows = list(csv.DictReader(resp.text.splitlines()))
+    reader = csv.DictReader(resp.text.splitlines())
+    rows = [{k.strip(): v.strip() for k, v in row.items()} for row in reader]
 
     subscribers = load_subscribers()
     existing_emails = {s["email"] for s in subscribers}
