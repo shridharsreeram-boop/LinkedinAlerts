@@ -94,8 +94,12 @@ def fetch_jobs_sweden(title, location, results=20):
             })
         return normalized
     except Exception as e:
-        print(f"    [warn] Sweden (JobTech) fetch failed: {e}")
-        return []
+        print(f"  [warn] relevance scoring failed: {e}")
+        try:
+            print(f"  [warn] response body: {resp.text}")
+        except Exception:
+            pass
+        return 7
 
 
 def fetch_jobs(title, location, countries=None, results_per_country=10):
