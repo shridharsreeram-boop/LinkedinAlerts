@@ -34,8 +34,8 @@ SUBSCRIBERS_FILE = os.path.join(DATA_DIR, "subscribers.json")
 SEEN_JOBS_FILE = os.path.join(DATA_DIR, "seen_jobs.json")
 LOG_FILE = os.path.join(DATA_DIR, "run_log.json")
 
-ADZUNA_COUNTRY = "gb"  # NOTE: Adzuna doesn't support Sweden ('se'). Using 'gb' as a workaround -
-# this mostly surfaces UK/multinational listings, not true Swedish-market jobs.
+ADZUNA_COUNTRIES = ["gb", "us", "au", "at", "be", "br", "ca", "ch", "de", "es",
+                     "fr", "in", "it", "mx", "nl", "nz", "pl", "sg", "za"]
 RELEVANCE_THRESHOLD = 6  # out of 10, minimum score to include a job in the email
 
 
