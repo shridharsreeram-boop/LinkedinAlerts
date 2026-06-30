@@ -9,17 +9,21 @@ Job Alert Pipeline
      - Sweden's free, official JobTech/Platsbanken API (no key needed)
      - Adzuna API, looped across ~19 supported countries (Adzuna has no
        Sweden coverage, so this catches everything else)
-4. Filters out jobs already seen (data/seen_jobs.json)
-5. Uses Claude API to score relevance of each new job to the subscriber's
+4. Detects when the SAME job posting (same title + same company) appears
+   in both sources, and merges them into a single entry listing both
+   source links, instead of sending a duplicate.
+5. Filters out jobs already seen (data/seen_jobs.json)
+6. Uses Claude API to score relevance of each new job to the subscriber's
    stated title/keywords
-6. Sends an email digest of high-relevance new jobs via Resend
-7. Updates seen_jobs.json and writes a log entry for the dashboard
+7. Sends an email digest of high-relevance new jobs via Resend
+8. Updates seen_jobs.json and writes a log entry for the dashboard
 
 All credentials are read from environment variables (set as GitHub Actions
 secrets - never hardcoded).
 """
 
 import os
+import re
 import json
 import time
 import datetime
@@ -91,6 +95,7 @@ def fetch_jobs_sweden(title, location, results=20):
                 "description": description.get("text", "") or "",
                 "redirect_url": application.get("url") or h.get("webpage_url", "#"),
                 "_country": "se",
+                "_source": "JobTech (Sweden)",
             })
         return normalized
     except Exception as e:
@@ -121,12 +126,61 @@ def fetch_jobs(title, location, countries=None, results_per_country=10):
             if resp.status_code == 200:
                 for job in resp.json().get("results", []):
                     job["_country"] = country
+                    job["_source"] = f"Adzuna ({country.upper()})"
                     all_results.append(job)
             # silently skip countries that error (e.g. rate limits) - others still proceed
         except Exception as e:
             print(f"    [warn] fetch failed for country '{country}': {e}")
         time.sleep(0.3)  # be gentle on rate limits across many sequential calls
     return all_results
+
+
+def _normalize_for_match(text):
+    """Lowercase, strip punctuation/extra whitespace for fuzzy comparison."""
+    text = (text or "").lower()
+    text = re.sub(r"[^\w\s]", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
+def merge_cross_source_duplicates(jobs):
+    """Detect the same job posting appearing in multiple sources (e.g. both
+    JobTech and Adzuna often surface listings that originated on LinkedIn or
+    elsewhere). Jobs are considered the same if they have a matching
+    normalized title AND matching normalized company name. Matches are
+    merged into a single entry with a combined list of source links rather
+    than being sent as duplicates."""
+    merged = []
+    seen_keys = {}
+
+    for job in jobs:
+        title_key = _normalize_for_match(job.get("title"))
+        company_key = _normalize_for_match(
+            (job.get("company") or {}).get("display_name")
+        )
+        match_key = (title_key, company_key)
+
+        if title_key and company_key and match_key in seen_keys:
+            existing = seen_keys[match_key]
+            existing.setdefault("_sources", [])
+            if not existing["_sources"]:
+                # first time we're merging - seed with the original entry's own source
+                existing["_sources"].append({
+                    "name": existing.get("_source", "Unknown source"),
+                    "url": existing.get("redirect_url", "#"),
+                })
+            existing["_sources"].append({
+                "name": job.get("_source", "Unknown source"),
+                "url": job.get("redirect_url", "#"),
+            })
+            # keep the existing entry as the canonical one; skip adding a duplicate
+            continue
+
+        merged.append(job)
+        if title_key and company_key:
+            seen_keys[match_key] = job
+
+    return merged
 
 
 def score_relevance(job, subscriber_keywords):
@@ -184,10 +238,24 @@ def send_email(to_email, subscriber_name, jobs):
         company = job.get("company", {}).get("display_name", "Unknown company")
         location = job.get("location", {}).get("display_name", "Unknown location")
         link = job.get("redirect_url", "#")
+        sources = job.get("_sources")
+
+        if sources:
+            # Job was found on multiple sources - show all of them
+            source_links = " &middot; ".join(
+                f'<a href="{s["url"]}" style="color:#0a66c2;">{s["name"]}</a>'
+                for s in sources
+            )
+            source_line = f'<p style="margin:4px 0;color:#888;font-size:13px;">Also found on: {source_links}</p>'
+        else:
+            single_source = job.get("_source", "")
+            source_line = f'<p style="margin:4px 0;color:#888;font-size:13px;">Source: {single_source}</p>' if single_source else ""
+
         job_html += f"""
         <div style="margin-bottom:16px;padding:12px;border:1px solid #e0e0e0;border-radius:8px;">
           <a href="{link}" style="font-size:16px;font-weight:bold;color:#0a66c2;text-decoration:none;">{title}</a>
           <p style="margin:4px 0;color:#444;">{company} &middot; {location}</p>
+          {source_line}
           <p style="margin:0;color:#888;font-size:13px;">Relevance score: {score}/10</p>
         </div>"""
 
@@ -249,6 +317,11 @@ def main():
             print(f"  [error] fetch failed for {email}: {e}")
             run_summary["results"].append({"email": email, "status": "fetch_error", "detail": str(e)})
             continue
+
+        jobs = merge_cross_source_duplicates(jobs)
+        merged_count = sum(1 for j in jobs if j.get("_sources"))
+        if merged_count:
+            print(f"  [info] merged {merged_count} job(s) found on multiple sources")
 
         already_seen = set(seen_jobs.get(email, []))
         new_jobs = [j for j in jobs if str(j.get("id")) not in already_seen]
