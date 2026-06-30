@@ -26,8 +26,9 @@ jobs:
       - name: Sync new signups from form
         env:
           GOOGLE_SHEET_CSV_URL: ${{ secrets.GOOGLE_SHEET_CSV_URL }}
+          UNSUBSCRIBE_SHEET_CSV_URL: ${{ secrets.UNSUBSCRIBE_SHEET_CSV_URL }}
         run: python AI_project/scripts/sync_signups.py
-
+        
       - name: Run job alert pipeline
         env:
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
