@@ -266,6 +266,8 @@ def send_email(to_email, subscriber_name, jobs):
       {job_html}
       <p style="color:#999;font-size:12px;margin-top:24px;">
         You're receiving this because you signed up for job alerts.
+        <a href="https://docs.google.com/forms/d/e/UNSUBSCRIBE_FORM_ID/viewform?usp=pp_url&entry.UNSUBSCRIBE_ENTRY_ID={to_email}"
+           style="color:#999;">Unsubscribe</a>
       </p>
     </div>"""
 
