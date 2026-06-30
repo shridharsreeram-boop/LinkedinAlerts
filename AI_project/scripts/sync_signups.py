@@ -4,13 +4,21 @@ sync_signups.py
 ----------------
 Pulls new signups from a Google Sheet (used as a free form backend for the
 signup page in docs/index.html) and merges them into data/subscribers.json.
+Also pulls unsubscribe requests from a second Google Sheet and removes
+matching subscribers.
 
-Setup:
-1. Create a Google Form with fields: Name, Email, Job Title, Location,
-   Country Code, Alert Duration (days).
-2. Link it to a Google Sheet.
-3. Publish the sheet to the web as CSV (File > Share > Publish to web > CSV),
-   and put that URL in the GOOGLE_SHEET_CSV_URL secret/env var.
+Setup (signup form):
+1. Google Form with fields: Name, Email, Job Title, Location, Country
+   Code, Alert Duration (days).
+2. Link it to a Google Sheet, publish that Sheet as CSV, put the URL in
+   the GOOGLE_SHEET_CSV_URL env var / secret.
+
+Setup (unsubscribe form):
+1. A second, simple Google Form with just an Email field.
+2. Each email sent includes a link to this form, pre-filled with the
+   subscriber's email (using Google Forms' prefill URL feature).
+3. Publish that Sheet as CSV too, put the URL in
+   UNSUBSCRIBE_SHEET_CSV_URL env var / secret.
 """
 
 import os
@@ -20,6 +28,7 @@ import datetime
 import requests
 
 GOOGLE_SHEET_CSV_URL = os.environ.get("GOOGLE_SHEET_CSV_URL")
+UNSUBSCRIBE_SHEET_CSV_URL = os.environ.get("UNSUBSCRIBE_SHEET_CSV_URL")
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 SUBSCRIBERS_FILE = os.path.join(DATA_DIR, "subscribers.json")
 
@@ -36,17 +45,19 @@ def save_subscribers(subs):
         json.dump(subs, f, indent=2)
 
 
-def main():
-    if not GOOGLE_SHEET_CSV_URL:
-        print("[warn] GOOGLE_SHEET_CSV_URL not set, nothing to sync")
-        return
-
-    resp = requests.get(GOOGLE_SHEET_CSV_URL, timeout=30)
+def fetch_csv_rows(url):
+    resp = requests.get(url, timeout=30)
     resp.raise_for_status()
     reader = csv.DictReader(resp.text.splitlines())
-    rows = [{k.strip(): v.strip() for k, v in row.items()} for row in reader]
+    return [{k.strip(): v.strip() for k, v in row.items()} for row in reader]
 
-    subscribers = load_subscribers()
+
+def process_signups(subscribers):
+    if not GOOGLE_SHEET_CSV_URL:
+        print("[warn] GOOGLE_SHEET_CSV_URL not set, skipping signup sync")
+        return subscribers, 0, 0
+
+    rows = fetch_csv_rows(GOOGLE_SHEET_CSV_URL)
     by_email = {s["email"]: s for s in subscribers}
 
     # Keep only the LATEST row per email from the form (Google Forms appends new rows,
@@ -80,8 +91,38 @@ def main():
 
         by_email[email] = new_record
 
-    save_subscribers(list(by_email.values()))
-    print(f"Synced signups: {added} new subscriber(s) added, {updated} updated.")
+    return list(by_email.values()), added, updated
+
+
+def process_unsubscribes(subscribers):
+    if not UNSUBSCRIBE_SHEET_CSV_URL:
+        print("[warn] UNSUBSCRIBE_SHEET_CSV_URL not set, skipping unsubscribe sync")
+        return subscribers, 0
+
+    try:
+        rows = fetch_csv_rows(UNSUBSCRIBE_SHEET_CSV_URL)
+    except Exception as e:
+        print(f"[warn] failed to fetch unsubscribe sheet: {e}")
+        return subscribers, 0
+
+    unsubscribe_emails = {row.get("Email", "").strip() for row in rows if row.get("Email", "").strip()}
+    if not unsubscribe_emails:
+        return subscribers, 0
+
+    before_count = len(subscribers)
+    remaining = [s for s in subscribers if s["email"] not in unsubscribe_emails]
+    removed = before_count - len(remaining)
+    return remaining, removed
+
+
+def main():
+    subscribers = load_subscribers()
+
+    subscribers, added, updated = process_signups(subscribers)
+    subscribers, removed = process_unsubscribes(subscribers)
+
+    save_subscribers(subscribers)
+    print(f"Synced signups: {added} new subscriber(s) added, {updated} updated, {removed} unsubscribed.")
 
 
 if __name__ == "__main__":
