@@ -29,6 +29,8 @@ jobs:
         env:
           GOOGLE_SHEET_CSV_URL: ${{ secrets.GOOGLE_SHEET_CSV_URL }}
           UNSUBSCRIBE_SHEET_CSV_URL: ${{ secrets.UNSUBSCRIBE_SHEET_CSV_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           output=$(python AI_project/scripts/sync_signups.py)
           echo "$output"
