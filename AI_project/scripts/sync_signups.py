@@ -29,6 +29,8 @@ import requests
 
 GOOGLE_SHEET_CSV_URL = os.environ.get("GOOGLE_SHEET_CSV_URL")
 UNSUBSCRIBE_SHEET_CSV_URL = os.environ.get("UNSUBSCRIBE_SHEET_CSV_URL")
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+GITHUB_REPOSITORY = os.environ.get("GITHUB_REPOSITORY")  # e.g. "shridharsreeram-boop/LinkedinAlerts"
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 SUBSCRIBERS_FILE = os.path.join(DATA_DIR, "subscribers.json")
 
@@ -115,6 +117,31 @@ def process_unsubscribes(subscribers):
     return remaining, removed
 
 
+def trigger_welcome_run():
+    """Fire a repository_dispatch event so the welcome workflow runs immediately
+    for the new subscriber, without waiting for the next scheduled cron run."""
+    if not GITHUB_TOKEN or not GITHUB_REPOSITORY:
+        print("[warn] GITHUB_TOKEN or GITHUB_REPOSITORY not set, skipping welcome run trigger")
+        return
+    try:
+        resp = requests.post(
+            f"https://api.github.com/repos/{GITHUB_REPOSITORY}/dispatches",
+            headers={
+                "Authorization": f"Bearer {GITHUB_TOKEN}",
+                "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+            json={"event_type": "new_subscriber"},
+            timeout=15,
+        )
+        if resp.status_code == 204:
+            print("  [info] Welcome run triggered for new subscriber.")
+        else:
+            print(f"  [warn] Failed to trigger welcome run: {resp.status_code} {resp.text}")
+    except Exception as e:
+        print(f"  [warn] Welcome run trigger failed: {e}")
+
+
 def main():
     subscribers = load_subscribers()
 
@@ -123,6 +150,9 @@ def main():
 
     save_subscribers(subscribers)
     print(f"Synced signups: {added} new subscriber(s) added, {updated} updated, {removed} unsubscribed.")
+
+    if added > 0:
+        trigger_welcome_run()
 
 
 if __name__ == "__main__":
