@@ -227,7 +227,7 @@ Respond with ONLY the number, nothing else."""
         return 7
 
 
-def send_email(to_email, subscriber_name, jobs):
+def send_email(to_email, subscriber_name, jobs, job_title="", location=""):
     """Send a digest email via Resend."""
     if not RESEND_API_KEY:
         print("  [warn] RESEND_API_KEY not set, skipping email send")
@@ -326,7 +326,7 @@ def send_email(to_email, subscriber_name, jobs):
         json={
             "from": ALERT_FROM_EMAIL,
             "to": [to_email],
-            "subject": f"{len(jobs)} new job match(es) for you — {title} in {location}",
+            "subject": f"{len(jobs)} new match(es) for {job_title or 'your search'}{' in ' + location if location else ''}",
             "html": html,
         },
         timeout=30,
@@ -381,16 +381,12 @@ def main():
                 relevant_jobs.append((job, score))
             time.sleep(0.5)  # be gentle on API rate limits
 
-        # Sort by relevance score descending and cap at 20
-        # so emails stay scannable regardless of how many jobs were found
-        relevant_jobs = sorted(relevant_jobs, key=lambda x: x[1], reverse=True)[:20]
-
         # mark all new jobs (relevant or not) as seen so we don't re-score them
         seen_jobs.setdefault(email, [])
         seen_jobs[email].extend(str(j.get("id")) for j in new_jobs)
 
         if relevant_jobs:
-            sent = send_email(email, sub.get("name", "there"), relevant_jobs)
+            sent = send_email(email, sub.get("name", "there"), relevant_jobs, title, location)
             status = "sent" if sent else "email_failed"
         else:
             status = "no_new_relevant_jobs"
