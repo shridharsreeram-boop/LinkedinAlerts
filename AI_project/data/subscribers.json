@@ -6,7 +6,8 @@
     "location": "Karlstad",
     "country_code": "",
     "end_date": "2026-07-05",
-    "signed_up": "2026-06-29"
+    "signed_up": "2026-06-29",
+    "signup_timestamp": "6/29/2026 13:55:55"
   },
   {
     "name": "Niklas Haugeneset",
@@ -15,6 +16,17 @@
     "location": "",
     "country_code": "",
     "end_date": "2026-07-08",
-    "signed_up": "2026-06-29"
+    "signed_up": "2026-06-29",
+    "signup_timestamp": "6/29/2026 14:25:50"
+  },
+  {
+    "name": "Sriram Sridhar",
+    "email": "shridhar.sreeram@gmail.com",
+    "job_title": "Senior Software Engineer",
+    "location": "Stockholm",
+    "country_code": "",
+    "end_date": "2026-08-10",
+    "signed_up": "2026-07-01",
+    "signup_timestamp": "7/1/2026 13:14:59"
   }
 ]
