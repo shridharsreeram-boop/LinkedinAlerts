@@ -326,7 +326,7 @@ def send_email(to_email, subscriber_name, jobs):
         json={
             "from": ALERT_FROM_EMAIL,
             "to": [to_email],
-            "subject": f"{len(jobs)} new job match(es) for you",
+            "subject": f"{len(jobs)} new job match(es) for you — {title} in {location}",
             "html": html,
         },
         timeout=30,
@@ -380,6 +380,10 @@ def main():
             if score >= RELEVANCE_THRESHOLD:
                 relevant_jobs.append((job, score))
             time.sleep(0.5)  # be gentle on API rate limits
+
+        # Sort by relevance score descending and cap at 20
+        # so emails stay scannable regardless of how many jobs were found
+        relevant_jobs = sorted(relevant_jobs, key=lambda x: x[1], reverse=True)[:20]
 
         # mark all new jobs (relevant or not) as seen so we don't re-score them
         seen_jobs.setdefault(email, [])
