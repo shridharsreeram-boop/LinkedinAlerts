@@ -40,31 +40,7 @@ simple public ops dashboard — built without paying for any infrastructure.
 ## Architecture
 
 ```
-Signup page (GitHub Pages)
-        │  (Google Form)
-        ▼
-Google Sheet ──sync_signups.py──► data/subscribers.json
-                                          │
-                       GitHub Actions cron (every 6h)
-                                          │
-                                          ▼
-                                scripts/run_pipeline.py
-                                          │
-        ┌─────────────────────────────────┼─────────────────────────────────┐
-        ▼                                 ▼                                 ▼
-JobTech/Platsbanken API          Adzuna API (looped across          Claude API
-(Sweden, free, no key)           ~19 supported countries)        (relevance scoring)
-        │                                 │                                 │
-        └───────────────► merged, deduped, scored results ◄─────────────────┘
-                                          │
-                                          ▼
-                              Resend API (email digest)
-                                          │
-                                          ▼
-                    data/seen_jobs.json, data/run_log.json
-                                          │
-                                          ▼
-                  scripts/generate_dashboard.py → docs/dashboard.html
+![Architecture](docs/job_alert_pipeline_architecture.png)
 ```
 
 ### Why two job sources
