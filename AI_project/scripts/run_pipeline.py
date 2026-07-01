@@ -35,6 +35,7 @@ ADZUNA_APP_KEY = os.environ.get("ADZUNA_APP_KEY")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
 ALERT_FROM_EMAIL = os.environ.get("ALERT_FROM_EMAIL", "alerts@yourdomain.com")
+PIPELINE_OWNER_EMAIL = os.environ.get("PIPELINE_OWNER_EMAIL", "shridhar.sreeram@gmail.com")
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 SUBSCRIBERS_FILE = os.path.join(DATA_DIR, "subscribers.json")
@@ -406,6 +407,72 @@ def main():
     save_json(LOG_FILE, run_log)
 
     print("Pipeline run complete.")
+
+    # Send error alert to pipeline owner if anything went wrong
+    error_results = [r for r in run_summary["results"]
+                     if r.get("status") in ("fetch_error", "email_failed")]
+    if error_results:
+        _send_error_alert(error_results)
+
+
+def _send_error_alert(errors):
+    """Email the pipeline owner when something goes wrong in a run."""
+    if not RESEND_API_KEY or not PIPELINE_OWNER_EMAIL:
+        print("  [warn] Cannot send error alert — RESEND_API_KEY or PIPELINE_OWNER_EMAIL not set")
+        return
+    error_html = "".join(
+        f"<li><strong>{e.get('email', '?')}</strong>: {e.get('status')} — {e.get('detail', 'no detail')}</li>"
+        for e in errors
+    )
+    try:
+        resp = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {RESEND_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "from": ALERT_FROM_EMAIL,
+                "to": [PIPELINE_OWNER_EMAIL],
+                "subject": f"⚠️ Job Alert Pipeline — {len(errors)} error(s) detected",
+                "html": f"""<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:32px 16px;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;">
+  <tr><td style="background-color:#dc2626;padding:24px 40px;">
+    <div style="font-size:20px;font-weight:700;color:#ffffff;">⚠️ Pipeline Error Alert</div>
+    <div style="font-size:13px;color:#fca5a5;margin-top:4px;">jobpingapp.xyz — action required</div>
+  </td></tr>
+  <tr><td style="padding:28px 40px;">
+    <p style="margin:0 0 16px 0;color:#1a2332;font-size:15px;">{len(errors)} issue(s) detected in the latest pipeline run:</p>
+    <ul style="margin:0 0 24px 0;padding-left:20px;color:#475569;font-size:14px;line-height:1.8;">
+      {error_html}
+    </ul>
+    <a href="https://github.com/shridharsreeram-boop/LinkedinAlerts/actions"
+       style="display:inline-block;background-color:#1a2332;color:#ffffff;text-decoration:none;padding:10px 20px;border-radius:6px;font-size:13px;font-weight:600;">
+      View Actions Logs →
+    </a>
+  </td></tr>
+  <tr><td style="background-color:#f8fafc;padding:16px 40px;border-top:1px solid #e2e8f0;">
+    <p style="margin:0;font-size:12px;color:#94a3b8;">This is an automated alert from your job alert pipeline.</p>
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>""",
+            },
+            timeout=30,
+        )
+        if resp.status_code < 300:
+            print(f"  [info] Error alert sent to {PIPELINE_OWNER_EMAIL}")
+        else:
+            print(f"  [warn] Failed to send error alert: {resp.status_code} {resp.text}")
+    except Exception as e:
+        print(f"  [warn] Error alert send failed: {e}")
 
 
 if __name__ == "__main__":
