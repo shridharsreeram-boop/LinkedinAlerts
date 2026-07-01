@@ -241,35 +241,80 @@ def send_email(to_email, subscriber_name, jobs):
         sources = job.get("_sources")
 
         if sources:
-            # Job was found on multiple sources - show all of them
-            source_links = " &middot; ".join(
-                f'<a href="{s["url"]}" style="color:#0a66c2;">{s["name"]}</a>'
+            source_links = " &nbsp;&middot;&nbsp; ".join(
+                f'<a href="{s["url"]}" style="color:#d97706;text-decoration:none;">{s["name"]}</a>'
                 for s in sources
             )
-            source_line = f'<p style="margin:4px 0;color:#888;font-size:13px;">Also found on: {source_links}</p>'
+            source_line = f'''
+            <p style="margin:8px 0 0 0;font-size:12px;color:#92400e;">
+              &#9889; Also found on: {source_links}
+            </p>'''
+            card_style = "margin-bottom:16px;border:1px solid #fde68a;border-radius:8px;border-top:3px solid #f59e0b;overflow:hidden;"
+            cell_style = "padding:16px 20px;background-color:#fffbf0;"
         else:
             single_source = job.get("_source", "")
-            source_line = f'<p style="margin:4px 0;color:#888;font-size:13px;">Source: {single_source}</p>' if single_source else ""
+            source_line = f'<p style="margin:8px 0 0 0;font-size:12px;color:#94a3b8;">Source: {single_source}</p>' if single_source else ""
+            card_style = "margin-bottom:16px;border:1px solid #e2e8f0;border-radius:8px;border-top:3px solid #0ea5e9;overflow:hidden;"
+            cell_style = "padding:16px 20px;background-color:#f8fafc;"
 
         job_html += f"""
-        <div style="margin-bottom:16px;padding:12px;border:1px solid #e0e0e0;border-radius:8px;">
-          <a href="{link}" style="font-size:16px;font-weight:bold;color:#0a66c2;text-decoration:none;">{title}</a>
-          <p style="margin:4px 0;color:#444;">{company} &middot; {location}</p>
-          {source_line}
-          <p style="margin:0;color:#888;font-size:13px;">Relevance score: {score}/10</p>
-        </div>"""
+        <table width="100%" cellpadding="0" cellspacing="0" style="{card_style}">
+          <tr><td style="{cell_style}">
+            <a href="{link}" style="font-size:16px;font-weight:600;color:#1a2332;text-decoration:none;display:block;margin-bottom:6px;">{title}</a>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="font-size:13px;color:#475569;">{company} &nbsp;&middot;&nbsp; {location}</td>
+                <td align="right" style="font-size:12px;color:#94a3b8;white-space:nowrap;">Score: <strong style="color:#0ea5e9;">{score}/10</strong></td>
+              </tr>
+            </table>
+            {source_line}
+          </td></tr>
+        </table>"""
 
-    html = f"""
-    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
-      <h2>New job matches for you, {subscriber_name}</h2>
-      <p>{len(jobs)} new relevant posting(s) found:</p>
-      {job_html}
-      <p style="color:#999;font-size:12px;margin-top:24px;">
-        You're receiving this because you signed up for job alerts.
+    html = f"""<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:32px 16px;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+  <tr><td style="background-color:#1a2332;border-radius:12px 12px 0 0;padding:28px 40px;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td>
+        <div style="font-size:20px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">&#9889; jobpingapp</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:3px;letter-spacing:1px;text-transform:uppercase;">Job Alert</div>
+      </td>
+      <td align="right">
+        <span style="background-color:#0ea5e9;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:#ffffff;letter-spacing:0.5px;">NEW MATCHES</span>
+      </td>
+    </tr></table>
+  </td></tr>
+
+  <tr><td style="background-color:#0f172a;padding:14px 40px;">
+    <p style="margin:0;color:#cbd5e1;font-size:14px;">Hi <strong style="color:#ffffff;">{subscriber_name}</strong> — here are your latest matches</p>
+  </td></tr>
+
+  <tr><td style="background-color:#ffffff;padding:28px 40px;">
+    <p style="margin:0 0 20px 0;font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;letter-spacing:1px;">{len(jobs)} new posting(s) found</p>
+    {job_html}
+  </td></tr>
+
+  <tr><td style="background-color:#1a2332;border-radius:0 0 12px 12px;padding:20px 40px;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="font-size:12px;color:#475569;">Signed up at <span style="color:#94a3b8;">jobpingapp.xyz</span></td>
+      <td align="right">
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdzdAz0mL4Q7NoYWtDWLgICEIIsujieSw7bvy7BEckUjZfF6g/viewform?usp=pp_url&entry.169517527={to_email}"
-           style="color:#999;">Unsubscribe</a>
-      </p>
-    </div>"""
+           style="font-size:12px;color:#64748b;text-decoration:none;border-bottom:1px solid #334155;padding-bottom:1px;">Unsubscribe</a>
+      </td>
+    </tr></table>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>"""
 
     resp = requests.post(
         "https://api.resend.com/emails",
