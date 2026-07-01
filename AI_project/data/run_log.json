@@ -537,5 +537,22 @@
         "relevant_jobs_sent": 14
       }
     ]
+  },
+  {
+    "timestamp": "2026-07-01T10:06:05.449492",
+    "results": [
+      {
+        "email": "sriramsridharcr71997@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0
+      },
+      {
+        "email": "niklas.haugeneset@tieto.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0
+      }
+    ]
   }
 ]
