@@ -302,10 +302,10 @@ def send_email(to_email, subscriber_name, jobs):
 
   <tr><td style="background-color:#1a2332;border-radius:0 0 12px 12px;padding:20px 40px;">
     <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td style="font-size:12px;color:#475569;">Signed up at <span style="color:#94a3b8;">jobpingapp.xyz</span></td>
+      <td style="font-size:12px;color:#64748b;">You signed up for alerts at <span style="color:#94a3b8;font-weight:500;">jobpingapp.xyz</span></td>
       <td align="right">
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdzdAz0mL4Q7NoYWtDWLgICEIIsujieSw7bvy7BEckUjZfF6g/viewform?usp=pp_url&entry.169517527={to_email}"
-           style="font-size:12px;color:#64748b;text-decoration:none;border-bottom:1px solid #334155;padding-bottom:1px;">Unsubscribe</a>
+           style="font-size:12px;color:#0ea5e9;text-decoration:none;font-weight:500;">Unsubscribe</a>
       </td>
     </tr></table>
   </td></tr>
