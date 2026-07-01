@@ -5,7 +5,9 @@ sync_signups.py
 Pulls new signups from a Google Sheet (used as a free form backend for the
 signup page in docs/index.html) and merges them into data/subscribers.json.
 Also pulls unsubscribe requests from a second Google Sheet and removes
-matching subscribers.
+matching subscribers — but only if the unsubscribe request is NEWER than
+the subscriber's latest signup (so re-subscribing after unsubscribing works
+correctly).
 
 Setup (signup form):
 1. Google Form with fields: Name, Email, Job Title, Location, Country
@@ -30,7 +32,7 @@ import requests
 GOOGLE_SHEET_CSV_URL = os.environ.get("GOOGLE_SHEET_CSV_URL")
 UNSUBSCRIBE_SHEET_CSV_URL = os.environ.get("UNSUBSCRIBE_SHEET_CSV_URL")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
-GITHUB_REPOSITORY = os.environ.get("GITHUB_REPOSITORY")  # e.g. "shridharsreeram-boop/LinkedinAlerts"
+GITHUB_REPOSITORY = os.environ.get("GITHUB_REPOSITORY")
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 SUBSCRIBERS_FILE = os.path.join(DATA_DIR, "subscribers.json")
 
@@ -54,16 +56,17 @@ def fetch_csv_rows(url):
     return [{k.strip(): v.strip() for k, v in row.items()} for row in reader]
 
 
-def process_signups(subscribers):
-    if not GOOGLE_SHEET_CSV_URL:
-        print("[warn] GOOGLE_SHEET_CSV_URL not set, skipping signup sync")
+def process_signups(subscribers, rows):
+    """Process signup rows and merge into subscribers list."""
+    if not rows:
+        print("[warn] No signup rows available, skipping signup sync")
         return subscribers, 0, 0
 
-    rows = fetch_csv_rows(GOOGLE_SHEET_CSV_URL)
     by_email = {s["email"]: s for s in subscribers}
 
-    # Keep only the LATEST row per email from the form (Google Forms appends new rows,
-    # so a resubmission with the same email means "update my preferences")
+    # Keep only the LATEST row per email from the form (Google Forms appends
+    # new rows, so a resubmission with the same email means "update my
+    # preferences")
     latest_by_email = {}
     for row in rows:
         email = row.get("Email", "").strip()
@@ -83,6 +86,7 @@ def process_signups(subscribers):
             "country_code": row.get("Country Code", "").strip().lower(),
             "end_date": end_date,
             "signed_up": by_email.get(email, {}).get("signed_up", datetime.date.today().isoformat()),
+            "signup_timestamp": row.get("Timestamp", "").strip(),
         }
 
         if email in by_email:
@@ -96,7 +100,10 @@ def process_signups(subscribers):
     return list(by_email.values()), added, updated
 
 
-def process_unsubscribes(subscribers):
+def process_unsubscribes(subscribers, signup_rows):
+    """Remove subscribers who have unsubscribed — but only if their
+    unsubscribe request is newer than their latest signup, so that
+    re-subscribing after unsubscribing works correctly."""
     if not UNSUBSCRIBE_SHEET_CSV_URL:
         print("[warn] UNSUBSCRIBE_SHEET_CSV_URL not set, skipping unsubscribe sync")
         return subscribers, 0
@@ -107,19 +114,44 @@ def process_unsubscribes(subscribers):
         print(f"[warn] failed to fetch unsubscribe sheet: {e}")
         return subscribers, 0
 
-    unsubscribe_emails = {row.get("Email", "").strip() for row in rows if row.get("Email", "").strip()}
-    if not unsubscribe_emails:
-        return subscribers, 0
+    # Build map of email -> latest unsubscribe timestamp
+    unsubscribe_times = {}
+    for row in rows:
+        email = row.get("Email", "").strip()
+        timestamp = row.get("Timestamp", "").strip()
+        if email:
+            if email not in unsubscribe_times or timestamp > unsubscribe_times[email]:
+                unsubscribe_times[email] = timestamp
 
+    # Build map of email -> latest signup timestamp from the signup sheet
+    signup_times = {}
+    for row in signup_rows:
+        email = row.get("Email", "").strip()
+        timestamp = row.get("Timestamp", "").strip()
+        if email:
+            if email not in signup_times or timestamp > signup_times[email]:
+                signup_times[email] = timestamp
+
+    # Only remove if unsubscribe timestamp is NEWER than latest signup timestamp
     before_count = len(subscribers)
-    remaining = [s for s in subscribers if s["email"] not in unsubscribe_emails]
+    remaining = []
+    for s in subscribers:
+        email = s["email"]
+        unsub_time = unsubscribe_times.get(email, "")
+        signup_time = signup_times.get(email, s.get("signup_timestamp", ""))
+        if unsub_time and unsub_time > signup_time:
+            print(f"  [info] Unsubscribing {email} (unsubscribed at {unsub_time}, last signed up at {signup_time})")
+        else:
+            remaining.append(s)
+
     removed = before_count - len(remaining)
     return remaining, removed
 
 
 def trigger_welcome_run():
-    """Fire a repository_dispatch event so the welcome workflow runs immediately
-    for the new subscriber, without waiting for the next scheduled cron run."""
+    """Fire a repository_dispatch event so the welcome workflow runs
+    immediately for the new subscriber, without waiting for the next
+    scheduled cron run."""
     if not GITHUB_TOKEN or not GITHUB_REPOSITORY:
         print("[warn] GITHUB_TOKEN or GITHUB_REPOSITORY not set, skipping welcome run trigger")
         return
@@ -145,8 +177,18 @@ def trigger_welcome_run():
 def main():
     subscribers = load_subscribers()
 
-    subscribers, added, updated = process_signups(subscribers)
-    subscribers, removed = process_unsubscribes(subscribers)
+    # Fetch signup rows once so both process_signups and process_unsubscribes
+    # can use them — avoids fetching twice and ensures timestamp comparison
+    # uses the same data
+    signup_rows = []
+    if GOOGLE_SHEET_CSV_URL:
+        try:
+            signup_rows = fetch_csv_rows(GOOGLE_SHEET_CSV_URL)
+        except Exception as e:
+            print(f"[warn] failed to fetch signup sheet: {e}")
+
+    subscribers, added, updated = process_signups(subscribers, signup_rows)
+    subscribers, removed = process_unsubscribes(subscribers, signup_rows)
 
     save_subscribers(subscribers)
     print(f"Synced signups: {added} new subscriber(s) added, {updated} updated, {removed} unsubscribed.")
