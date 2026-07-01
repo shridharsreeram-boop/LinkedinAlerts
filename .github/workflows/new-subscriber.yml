@@ -22,8 +22,6 @@ jobs:
           GOOGLE_SHEET_CSV_URL: ${{ secrets.GOOGLE_SHEET_CSV_URL }}
           UNSUBSCRIBE_SHEET_CSV_URL: ${{ secrets.UNSUBSCRIBE_SHEET_CSV_URL }}
         run: python AI_project/scripts/sync_signups.py
-      - name: Pull latest data after sync
-        run: git pull --rebase
       - name: Run pipeline for new subscriber
         env:
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
