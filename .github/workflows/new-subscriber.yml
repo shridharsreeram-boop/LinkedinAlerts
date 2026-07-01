@@ -29,6 +29,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           ALERT_FROM_EMAIL: ${{ secrets.ALERT_FROM_EMAIL }}
+          PIPELINE_OWNER_EMAIL: ${{ secrets.PIPELINE_OWNER_EMAIL }}
         run: python AI_project/scripts/run_pipeline.py
       - name: Generate dashboard
         run: python AI_project/scripts/generate_dashboard.py
