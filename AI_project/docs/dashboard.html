@@ -2,463 +2,956 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Job Alert Pipeline - Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jobpingapp — Pipeline Dashboard</title>
 <style>
-  body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; color: #222; }
-  h1 { font-size: 24px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e0e0e0; font-size: 14px; }
-  th { background: #f5f5f5; }
-  .stat { display:inline-block; margin-right: 24px; font-size: 14px; color: #555; }
-  .stat b { font-size: 20px; display:block; color:#111; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; color: #1a2332; }
+  .header { background: #1a2332; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .header h1 { color: #fff; font-size: 18px; font-weight: 700; }
+  .header span { color: #94a3b8; font-size: 12px; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .stat { background: #fff; border-radius: 10px; padding: 20px 24px; border: 1px solid #e2e8f0; }
+  .stat .value { font-size: 32px; font-weight: 700; color: #0ea5e9; }
+  .stat .label { font-size: 13px; color: #64748b; margin-top: 4px; }
+  .card { background: #fff; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 24px; overflow: hidden; }
+  .card-header { padding: 16px 20px; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #1a2332; }
+  .chart-wrap { padding: 20px 20px 8px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th { padding: 10px 12px; text-align: left; font-size: 12px; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+  .footer { text-align: center; color: #94a3b8; font-size: 12px; padding: 24px; }
+  a { color: #0ea5e9; text-decoration: none; }
 </style>
 </head>
 <body>
-  <h1>Job Alert Pipeline Dashboard</h1>
-  <div class="stat"><b>4</b>Active subscribers</div>
-  <div class="stat"><b>52</b>Total pipeline runs logged</div>
-  <p style="color:#888;font-size:13px;">Last updated: 2026-07-02T11:56:47.726320 UTC</p>
-  <table>
-    <thead>
-      <tr><th>Run Time (UTC)</th><th>Subscriber</th><th>Status</th><th>New Jobs Found</th><th>Relevant Sent</th></tr>
-    </thead>
-    <tbody>
-      
-            <tr>
-              <td>2026-07-02T11:55:32.144002</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+
+<div class="header">
+  <h1>⚡ jobpingapp — Pipeline Dashboard</h1>
+  <span>Last updated: 2026-07-02 12:12 UTC</span>
+</div>
+
+<div class="container">
+
+  <div class="stats">
+    <div class="stat">
+      <div class="value">4</div>
+      <div class="label">Active subscribers</div>
+    </div>
+    <div class="stat">
+      <div class="value">53</div>
+      <div class="label">Total pipeline runs</div>
+    </div>
+    <div class="stat">
+      <div class="value">1238</div>
+      <div class="label">Total jobs sent</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Jobs sent — last 14 days</div>
+    <div class="chart-wrap">
+      <svg width="532" height="144" viewBox="0 0 532 144">
+        <rect x="0" y="120" width="30" height="0" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="15" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-19</text><rect x="38" y="120" width="30" height="0" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="53" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-20</text><rect x="76" y="120" width="30" height="0" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="91" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-21</text><rect x="114" y="120" width="30" height="0" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="129" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-22</text><rect x="152" y="120" width="30" height="0" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="167" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-23</text><rect x="190" y="120" width="30" height="0" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="205" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-24</text><rect x="228" y="120" width="30" height="0" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="243" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-25</text><rect x="266" y="120" width="30" height="0" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="281" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-26</text><rect x="304" y="120" width="30" height="0" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="319" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-27</text><rect x="342" y="120" width="30" height="0" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="357" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-28</text><rect x="380" y="0" width="30" height="120" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="395" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-29</text><text x="395" y="-3" text-anchor="middle" font-size="9" fill="#0ea5e9">586</text><rect x="418" y="59" width="30" height="61" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="433" y="134" text-anchor="middle" font-size="9" fill="#64748b">06-30</text><text x="433" y="56" text-anchor="middle" font-size="9" fill="#0ea5e9">301</text><rect x="456" y="61" width="30" height="59" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="471" y="134" text-anchor="middle" font-size="9" fill="#64748b">07-01</text><text x="471" y="58" text-anchor="middle" font-size="9" fill="#0ea5e9">291</text><rect x="494" y="108" width="30" height="12" rx="3" fill="#0ea5e9" opacity="0.8"/><text x="509" y="134" text-anchor="middle" font-size="9" fill="#64748b">07-02</text><text x="509" y="105" text-anchor="middle" font-size="9" fill="#0ea5e9">60</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Active subscribers</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th><th>Job title(s)</th><th>Location(s)</th><th>Expires</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr style="border-bottom:1px solid #f1f5f9;">
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">Project Manager</td>
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">Karlstad</td>
+          <td style="padding:8px 12px;font-size:13px;color:#94a3b8;">2026-07-06</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f1f5f9;">
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">IT Manager</td>
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">Stockholm</td>
+          <td style="padding:8px 12px;font-size:13px;color:#94a3b8;">2026-07-03</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f1f5f9;">
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">Senior Software Engineer</td>
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">Stockholm</td>
+          <td style="padding:8px 12px;font-size:13px;color:#94a3b8;">2026-08-11</td>
+        </tr>
+        <tr style="border-bottom:1px solid #f1f5f9;">
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">j*********6@gmail.com</td>
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">CFD , Thermal , Fluid dynamics, Heat tra</td>
+          <td style="padding:8px 12px;font-size:13px;color:#475569;">Bangalore, Chennai</td>
+          <td style="padding:8px 12px;font-size:13px;color:#94a3b8;">2026-07-03</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Recent pipeline runs (last 30)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Time (UTC)</th><th>Subscriber</th><th>Status</th><th style="text-align:center;">Found</th><th style="text-align:center;">Sent</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 12:10</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:55:32.144002</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 12:10</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:55:32.144002</td>
-              <td>s**************m@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 12:10</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:55:32.144002</td>
-              <td>j*********6@gmail.com</td>
-              <td>sent</td>
-              <td>2</td>
-              <td>2</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 12:10</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">j*********6@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:37:46.016974</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:55</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:37:46.016974</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:55</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:37:46.016974</td>
-              <td>s**************m@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:55</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:37:46.016974</td>
-              <td>j*********6@gmail.com</td>
-              <td>sent</td>
-              <td>2</td>
-              <td>2</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:55</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">j*********6@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">2</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">2</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:22:01.984326</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:37</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:22:01.984326</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:37</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:22:01.984326</td>
-              <td>s**************m@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:37</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:22:01.984326</td>
-              <td>j*********6@gmail.com</td>
-              <td>sent</td>
-              <td>2</td>
-              <td>2</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:37</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">j*********6@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">2</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">2</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:17:29.752600</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:22</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:17:29.752600</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:22</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:17:29.752600</td>
-              <td>s**************m@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:22</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:17:29.752600</td>
-              <td>j*********6@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:22</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">j*********6@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">2</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">2</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:08:11.080746</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:17</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:08:11.080746</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:17</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:08:11.080746</td>
-              <td>s**************m@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:17</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T11:08:11.080746</td>
-              <td>j*********6@gmail.com</td>
-              <td>sent</td>
-              <td>90</td>
-              <td>20</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:17</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">j*********6@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:59:54.831114</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:08</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:59:54.831114</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:08</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:59:54.831114</td>
-              <td>s**************m@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:08</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:59:54.831114</td>
-              <td>j*********6@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 11:08</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">j*********6@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">90</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">20</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:53:03.423109</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:59</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:53:03.423109</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:59</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:53:03.423109</td>
-              <td>s**************m@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:59</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:53:03.423109</td>
-              <td>j*********6@gmail.com</td>
-              <td>sent</td>
-              <td>82</td>
-              <td>20</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:59</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">j*********6@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:33:18.918333</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:53</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:33:18.918333</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:53</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:33:18.918333</td>
-              <td>s**************m@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:53</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T10:33:18.918333</td>
-              <td>j*********6@gmail.com</td>
-              <td>sent</td>
-              <td>13</td>
-              <td>13</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:53</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">j*********6@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">82</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">20</td>
             </tr>
-            <tr>
-              <td>2026-07-02T08:29:34.234576</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:33</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T08:29:34.234576</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:33</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-02T08:29:34.234576</td>
-              <td>s**************m@gmail.com</td>
-              <td>sent</td>
-              <td>1</td>
-              <td>1</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:33</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T18:33:20.943986</td>
-              <td>s******************7@gmail.com</td>
-              <td>sent</td>
-              <td>8</td>
-              <td>8</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 10:33</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">j*********6@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">13</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">13</td>
             </tr>
-            <tr>
-              <td>2026-07-01T18:33:20.943986</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 08:29</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T18:33:20.943986</td>
-              <td>s**************m@gmail.com</td>
-              <td>sent</td>
-              <td>1</td>
-              <td>1</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 08:29</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T11:38:18.747761</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-02 08:29</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">1</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">1</td>
             </tr>
-            <tr>
-              <td>2026-07-01T11:38:18.747761</td>
-              <td>n***************t@tieto.com</td>
-              <td>sent</td>
-              <td>1</td>
-              <td>1</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 18:33</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">8</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">8</td>
             </tr>
-            <tr>
-              <td>2026-07-01T11:38:18.747761</td>
-              <td>s**************m@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 18:33</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T11:18:25.055726</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 18:33</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">1</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">1</td>
             </tr>
-            <tr>
-              <td>2026-07-01T11:18:25.055726</td>
-              <td>n***************t@tieto.com</td>
-              <td>sent</td>
-              <td>11</td>
-              <td>11</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 11:38</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T11:18:25.055726</td>
-              <td>s**************m@gmail.com</td>
-              <td>sent</td>
-              <td>17</td>
-              <td>17</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 11:38</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">1</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">1</td>
             </tr>
-            <tr>
-              <td>2026-07-01T11:08:19.322848</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 11:38</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T11:08:19.322848</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 11:18</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T10:58:18.562560</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 11:18</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">11</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">11</td>
             </tr>
-            <tr>
-              <td>2026-07-01T10:58:18.562560</td>
-              <td>n***************t@tieto.com</td>
-              <td>sent</td>
-              <td>11</td>
-              <td>11</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 11:18</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">17</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">17</td>
             </tr>
-            <tr>
-              <td>2026-07-01T10:48:15.701935</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 11:08</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T10:48:15.701935</td>
-              <td>n***************t@tieto.com</td>
-              <td>sent</td>
-              <td>24</td>
-              <td>24</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 11:08</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T10:27:29.041326</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 10:58</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T10:27:29.041326</td>
-              <td>n***************t@tieto.com</td>
-              <td>sent</td>
-              <td>37</td>
-              <td>37</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 10:58</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">11</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">11</td>
             </tr>
-            <tr>
-              <td>2026-07-01T10:06:05.449492</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 10:48</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T10:06:05.449492</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 10:48</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">24</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">24</td>
             </tr>
-            <tr>
-              <td>2026-07-01T09:58:56.586247</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 10:27</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T09:58:56.586247</td>
-              <td>n***************t@tieto.com</td>
-              <td>sent</td>
-              <td>14</td>
-              <td>14</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 10:27</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">37</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">37</td>
             </tr>
-            <tr>
-              <td>2026-07-01T09:52:27.002603</td>
-              <td>s**************m@gmail.com</td>
-              <td>sent</td>
-              <td>11</td>
-              <td>11</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 10:06</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T09:52:27.002603</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 10:06</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T09:52:27.002603</td>
-              <td>n***************t@tieto.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 09:58</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-            <tr>
-              <td>2026-07-01T09:45:37.212242</td>
-              <td>s**************m@gmail.com</td>
-              <td>sent</td>
-              <td>11</td>
-              <td>11</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 09:58</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">14</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">14</td>
             </tr>
-            <tr>
-              <td>2026-07-01T09:45:37.212242</td>
-              <td>s******************7@gmail.com</td>
-              <td>no_new_relevant_jobs</td>
-              <td>0</td>
-              <td>0</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 09:52</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">11</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">11</td>
             </tr>
-            <tr>
-              <td>2026-07-01T09:45:37.212242</td>
-              <td>n***************t@tieto.com</td>
-              <td>sent</td>
-              <td>145</td>
-              <td>145</td>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 09:52</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
             </tr>
-    </tbody>
-  </table>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 09:52</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 09:45</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">11</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">11</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 09:45</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-07-01 09:45</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">145</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">145</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 18:23</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 18:23</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 18:23</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">30</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">30</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 16:51</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 16:51</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 16:51</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">40</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">40</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 14:22</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 14:22</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 14:22</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">52</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">52</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 12:47</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 12:47</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 12:47</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">7</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">7</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 12:27</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 12:27</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 12:27</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 12:21</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 12:21</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 12:21</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">12</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">12</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 11:28</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 11:28</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 11:28</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">31</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">31</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 09:49</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 09:49</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-30 09:49</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#22c55e;font-weight:500;">sent</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">129</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">129</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-29 19:17</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s**************m@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-29 19:17</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">s******************7@gmail.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">no_new_relevant_jobs</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">0</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">0</td>
+            </tr>
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">2026-06-29 19:17</td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;">n***************t@tieto.com</td>
+              <td style="padding:8px 12px;">
+                <span style="font-size:12px;color:#94a3b8;font-weight:500;">email_failed</span>
+              </td>
+              <td style="padding:8px 12px;font-size:13px;color:#475569;text-align:center;">75</td>
+              <td style="padding:8px 12px;font-size:13px;color:#0ea5e9;text-align:center;font-weight:500;">75</td>
+            </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<div class="footer">
+  <a href="https://jobpingapp.xyz">jobpingapp.xyz</a> &nbsp;·&nbsp;
+  <a href="https://github.com/shridharsreeram-boop/LinkedinAlerts">GitHub</a>
+</div>
+
 </body>
 </html>
