@@ -190,7 +190,16 @@ def score_relevance(job, subscriber_keywords):
     if not ANTHROPIC_API_KEY:
         return 7  # neutral fallback if no API key configured
 
-    prompt = f"""A job seeker is interested in roles matching: "{subscriber_keywords}"
+    prompt = f"""A job seeker is looking for roles matching these keywords: "{subscriber_keywords}"
+
+These keywords may be related — for example "AI" and "CFD" together suggest the person
+wants roles at the intersection of AI/ML and computational fluid dynamics, such as
+"Simulation Engineer", "Digital Twin Engineer", "Computational Modelling Specialist",
+or "ML for Engineering Applications". Score these intersection roles highly even if
+neither exact keyword appears in the title.
+
+However, ONLY score a job highly if the role is genuinely relevant to the keywords
+as a JOB TITLE — not just because the description mentions the keyword in passing.
 
 Here is a job posting:
 Title: {job.get('title')}
@@ -198,7 +207,12 @@ Company: {job.get('company', {}).get('display_name', 'Unknown')}
 Location: {job.get('location', {}).get('display_name', 'Unknown')}
 Description: {job.get('description', '')[:800]}
 
-On a scale of 0 to 10, how relevant is this job posting to the job seeker's interests?
+Score 8-10: Job title directly matches one or more keywords, or is a clear intersection role
+Score 5-7: Job title is adjacent/related but not a direct match
+Score 1-4: Job only mentions keywords in description, not a real match
+Score 0: Completely irrelevant
+
+On a scale of 0 to 10, how relevant is this job to the seeker's interests?
 Respond with ONLY the number, nothing else."""
 
     resp = None
@@ -400,6 +414,22 @@ def main():
         merged_count = sum(1 for j in jobs if j.get("_sources"))
         if merged_count:
             print(f"  [info] merged {merged_count} job(s) found on multiple sources")
+
+        # Title-strict filtering: only keep jobs where at least one keyword
+        # appears in the job title. This prevents jobs that only mention
+        # a keyword in the description from appearing in alerts.
+        # Also keeps jobs with semantically related titles for Claude to score.
+        titles_lower = [t.lower() for t in titles]
+
+        def title_matches(job):
+            job_title_lower = (job.get("title") or "").lower()
+            return any(kw in job_title_lower for kw in titles_lower)
+
+        title_matched = [j for j in jobs if title_matches(j)]
+        title_filtered_out = len(jobs) - len(title_matched)
+        if title_filtered_out > 0:
+            print(f"  [info] filtered out {title_filtered_out} job(s) where keyword only appeared in description")
+        jobs = title_matched
 
         already_seen = set(seen_jobs.get(email, []))
         new_jobs = [j for j in jobs if str(j.get("id")) not in already_seen]
