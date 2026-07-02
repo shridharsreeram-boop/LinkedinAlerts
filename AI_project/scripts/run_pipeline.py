@@ -114,23 +114,29 @@ def fetch_jobs_india(title, location, results=10):
         print("    [warn] JSEARCH_API_KEY not set, skipping JSearch India fetch")
         return []
 
-    query = f"{title} in {location}".strip()
+    # Search each location separately for better results
+    locations_list = [l.strip() for l in location.split() if l.strip()]
+    query = f"{title} {locations_list[0] if locations_list else 'India'}"
+
     try:
         resp = requests.get(
             "https://jsearch.p.rapidapi.com/search",
             headers={
                 "X-RapidAPI-Key": JSEARCH_API_KEY,
                 "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+                "Content-Type": "application/json",
             },
             params={
                 "query": query,
                 "page": "1",
                 "num_pages": "1",
-                "country": "in",
-                "language": "en",
+                "date_posted": "month",
             },
             timeout=20,
         )
+        if resp.status_code == 403:
+            print("    [warn] JSearch API key invalid or not subscribed — check RapidAPI subscription")
+            return []
         resp.raise_for_status()
         jobs = resp.json().get("data", [])
         normalized = []
@@ -145,6 +151,7 @@ def fetch_jobs_india(title, location, results=10):
                 "_country": "in",
                 "_source": "JSearch (India)",
             })
+        print(f"    [info] JSearch returned {len(normalized)} results for '{query}'")
         return normalized
     except Exception as e:
         print(f"    [warn] JSearch India fetch failed: {e}")
