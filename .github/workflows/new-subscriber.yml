@@ -39,4 +39,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add AI_project/data/ AI_project/docs/dashboard.html
           git diff --quiet && git diff --staged --quiet || git commit -m "Welcome run for new subscriber [automated]"
+          git pull --rebase
           git push
