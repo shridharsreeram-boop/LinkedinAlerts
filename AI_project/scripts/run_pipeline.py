@@ -354,17 +354,31 @@ def main():
             continue
         active_subscribers.append(sub)
 
-        title = sub.get("job_title", "")
-        location = sub.get("location", "")
-        print(f"Checking jobs for {email}: '{title}' in '{location}' (Sweden + all Adzuna countries)")
+        title_raw = sub.get("job_title", "")
+        location_raw = sub.get("location", "")
+
+        # Support comma-separated job titles and locations
+        # Each title is searched with all locations combined as context
+        titles = [t.strip() for t in title_raw.split(",") if t.strip()]
+        locations = [l.strip() for l in location_raw.split(",") if l.strip()]
+        if not titles:
+            titles = [""]
+        combined_location = " ".join(locations)  # combine all locations into one search string
+
+        print(f"Checking jobs for {email}: titles={titles} locations={locations}")
 
         try:
-            jobs = fetch_jobs_sweden(title, location)
-            jobs += fetch_jobs(title, location)
+            jobs = []
+            for title in titles:
+                jobs += fetch_jobs_sweden(title, combined_location)
+                jobs += fetch_jobs(title, combined_location)
         except Exception as e:
             print(f"  [error] fetch failed for {email}: {e}")
             run_summary["results"].append({"email": email, "status": "fetch_error", "detail": str(e)})
             continue
+
+        # Use all titles as keywords for relevance scoring
+        scoring_keywords = title_raw
 
         jobs = merge_cross_source_duplicates(jobs)
         merged_count = sum(1 for j in jobs if j.get("_sources"))
@@ -376,17 +390,20 @@ def main():
 
         relevant_jobs = []
         for job in new_jobs:
-            score = score_relevance(job, title)
+            score = score_relevance(job, scoring_keywords)
             if score >= RELEVANCE_THRESHOLD:
                 relevant_jobs.append((job, score))
             time.sleep(0.5)  # be gentle on API rate limits
+
+        # Sort by relevance score descending and cap at 20
+        relevant_jobs = sorted(relevant_jobs, key=lambda x: x[1], reverse=True)[:20]
 
         # mark all new jobs (relevant or not) as seen so we don't re-score them
         seen_jobs.setdefault(email, [])
         seen_jobs[email].extend(str(j.get("id")) for j in new_jobs)
 
         if relevant_jobs:
-            sent = send_email(email, sub.get("name", "there"), relevant_jobs, title, location)
+            sent = send_email(email, sub.get("name", "there"), relevant_jobs, title_raw, location_raw)
             status = "sent" if sent else "email_failed"
         else:
             status = "no_new_relevant_jobs"
