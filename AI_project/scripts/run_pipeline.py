@@ -340,7 +340,7 @@ def send_email(to_email, subscriber_name, jobs, job_title="", location=""):
             <p style="margin:10px 0 0 0;font-size:12px;">
               <a href="{link}" style="color:#0ea5e9;text-decoration:none;font-weight:500;">View job &rarr;</a>
               &nbsp;&nbsp;&nbsp;
-              <a href="https://docs.google.com/forms/d/e/APPLIED_FORM_ID/viewform?usp=pp_url&entry.EMAIL={to_email}&entry.JOB={title} at {company}"
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSdkCwZB3_-gS7Pq9TOaAEEZomELxWxuRv5JiNN4-qTAh0JjWw/viewform?usp=pp_url&entry.1798283264={to_email}&entry.158842040={title}&entry.2135608452={company}"
                  style="color:#94a3b8;text-decoration:none;font-size:11px;">&#10003; Mark as applied</a>
             </p>
           </td></tr>
@@ -378,7 +378,12 @@ def send_email(to_email, subscriber_name, jobs, job_title="", location=""):
   <tr><td style="background-color:#1a2332;border-radius:0 0 12px 12px;padding:20px 40px;">
     <table width="100%" cellpadding="0" cellspacing="0"><tr>
       <td style="font-size:12px;color:#64748b;">You signed up for alerts at <span style="color:#94a3b8;font-weight:500;">jobpingapp.xyz</span></td>
-      <td align="right">
+      <td align="right" style="font-size:12px;">
+        <span style="color:#475569;">Helpful?</span>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdkCwZB3_-gS7Pq9TOaAEEZomELxWxuRv5JiNN4-qTAh0JjWw/viewform?usp=pp_url&entry.1798283264={to_email}&entry.158842040=👍+Yes&entry.2135608452=feedback"
+           style="color:#22c55e;text-decoration:none;margin:0 6px;">👍</a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdkCwZB3_-gS7Pq9TOaAEEZomELxWxuRv5JiNN4-qTAh0JjWw/viewform?usp=pp_url&entry.1798283264={to_email}&entry.158842040=👎+No&entry.2135608452=feedback"
+           style="color:#ef4444;text-decoration:none;margin-right:12px;">👎</a>
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdzdAz0mL4Q7NoYWtDWLgICEIIsujieSw7bvy7BEckUjZfF6g/viewform?usp=pp_url&entry.169517527={to_email}"
            style="font-size:12px;color:#0ea5e9;text-decoration:none;font-weight:500;">Unsubscribe</a>
       </td>
