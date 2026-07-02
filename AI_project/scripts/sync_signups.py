@@ -78,11 +78,17 @@ def process_signups(subscribers, rows):
         duration_days = int(row.get("Alert Duration (days)", 30) or 30)
         end_date = (datetime.date.today() + datetime.timedelta(days=duration_days)).isoformat()
 
+        from location_normalizer import normalize_locations
+        raw_location = row.get("Location", "").strip()
+        corrected_location = normalize_locations(raw_location)
+        if corrected_location != raw_location:
+            print(f"  [info] Location corrected: '{raw_location}' → '{corrected_location}'")
+
         new_record = {
             "name": row.get("Name", "there").strip(),
             "email": email,
             "job_title": row.get("Job Title", "").strip(),
-            "location": row.get("Location", "").strip(),
+            "location": corrected_location,
             "country_code": row.get("Country Code", "").strip().lower(),
             "end_date": end_date,
             "signed_up": by_email.get(email, {}).get("signed_up", datetime.date.today().isoformat()),
