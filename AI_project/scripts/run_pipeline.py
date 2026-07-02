@@ -283,6 +283,12 @@ def send_email(to_email, subscriber_name, jobs, job_title="", location=""):
               </tr>
             </table>
             {source_line}
+            <p style="margin:10px 0 0 0;font-size:12px;">
+              <a href="{link}" style="color:#0ea5e9;text-decoration:none;font-weight:500;">View job &rarr;</a>
+              &nbsp;&nbsp;&nbsp;
+              <a href="https://docs.google.com/forms/d/e/APPLIED_FORM_ID/viewform?usp=pp_url&entry.EMAIL={to_email}&entry.JOB={title} at {company}"
+                 style="color:#94a3b8;text-decoration:none;font-size:11px;">&#10003; Mark as applied</a>
+            </p>
           </td></tr>
         </table>"""
 
@@ -351,6 +357,47 @@ def send_email(to_email, subscriber_name, jobs, job_title="", location=""):
     return True
 
 
+# ---------- Keyword expansions ----------
+# Maps short keywords/acronyms to their full forms and related terms.
+# When a subscriber searches for "CFD", we also match job titles containing
+# "Computational Fluid Dynamics", "ANSYS", "OpenFOAM" etc.
+KEYWORD_EXPANSIONS = {
+    "cfd": ["computational fluid dynamics", "fluid simulation", "ansys", "openfoam",
+            "fluent", "star-ccm", "cfx", "flow simulation", "aerodynamics"],
+    "ai": ["artificial intelligence", "machine learning", "deep learning",
+           "neural network", "llm", "large language model", "generative ai"],
+    "ml": ["machine learning", "deep learning", "artificial intelligence",
+           "neural network", "data science", "predictive modelling"],
+    "fem": ["finite element", "finite element analysis", "fea", "abaqus",
+            "nastran", "ansys mechanical", "structural simulation"],
+    "fea": ["finite element analysis", "finite element", "fem", "abaqus",
+            "nastran", "structural analysis"],
+    "hvac": ["heating ventilation", "air conditioning", "thermal systems",
+             "building services", "mechanical services"],
+    "nlp": ["natural language processing", "text mining", "computational linguistics",
+            "language model", "speech recognition"],
+    "cv": ["computer vision", "image processing", "object detection",
+           "image recognition", "deep learning vision"],
+    "devops": ["site reliability", "sre", "platform engineering", "cloud infrastructure",
+               "ci/cd", "kubernetes", "docker"],
+    "fullstack": ["full stack", "full-stack", "frontend backend", "web development"],
+    "ios": ["swift", "objective-c", "xcode", "mobile development apple"],
+    "android": ["kotlin", "java mobile", "mobile development android"],
+}
+
+
+def get_expanded_keywords(titles):
+    """Return all search terms for a list of keywords — original terms
+    plus any expansions from the dictionary."""
+    expanded = set()
+    for title in titles:
+        title_lower = title.lower().strip()
+        expanded.add(title_lower)
+        if title_lower in KEYWORD_EXPANSIONS:
+            expanded.update(KEYWORD_EXPANSIONS[title_lower])
+    return expanded
+
+
 # ---------- Main ----------
 def main():
     os.makedirs(DATA_DIR, exist_ok=True)
@@ -415,21 +462,34 @@ def main():
         if merged_count:
             print(f"  [info] merged {merged_count} job(s) found on multiple sources")
 
-        # Title-strict filtering: only keep jobs where at least one keyword
-        # appears in the job title. This prevents jobs that only mention
-        # a keyword in the description from appearing in alerts.
-        # Also keeps jobs with semantically related titles for Claude to score.
-        titles_lower = [t.lower() for t in titles]
+        # Title-strict filtering with keyword expansions:
+        # Match job titles against both the original keywords AND their
+        # expanded forms (e.g. CFD → "Computational Fluid Dynamics", "ANSYS")
+        expanded_keywords = get_expanded_keywords(titles)
 
         def title_matches(job):
             job_title_lower = (job.get("title") or "").lower()
-            return any(kw in job_title_lower for kw in titles_lower)
+            return any(kw in job_title_lower for kw in expanded_keywords)
 
         title_matched = [j for j in jobs if title_matches(j)]
         title_filtered_out = len(jobs) - len(title_matched)
         if title_filtered_out > 0:
             print(f"  [info] filtered out {title_filtered_out} job(s) where keyword only appeared in description")
-        jobs = title_matched
+
+        # Cross-keyword dedup: if the same job matched multiple keyword
+        # searches (e.g. appears in both "CFD" and "Fluid dynamics" results),
+        # only include it once in the final email
+        seen_ids_this_run = set()
+        deduped_jobs = []
+        for job in title_matched:
+            job_id = str(job.get("id"))
+            if job_id not in seen_ids_this_run:
+                seen_ids_this_run.add(job_id)
+                deduped_jobs.append(job)
+        cross_dupes = len(title_matched) - len(deduped_jobs)
+        if cross_dupes > 0:
+            print(f"  [info] removed {cross_dupes} duplicate(s) matched by multiple keywords")
+        jobs = deduped_jobs
 
         already_seen = set(seen_jobs.get(email, []))
         new_jobs = [j for j in jobs if str(j.get("id")) not in already_seen]
