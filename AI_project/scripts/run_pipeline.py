@@ -34,6 +34,7 @@ ADZUNA_APP_ID = os.environ.get("ADZUNA_APP_ID")
 ADZUNA_APP_KEY = os.environ.get("ADZUNA_APP_KEY")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
+JSEARCH_API_KEY = os.environ.get("JSEARCH_API_KEY")
 ALERT_FROM_EMAIL = os.environ.get("ALERT_FROM_EMAIL", "alerts@yourdomain.com")
 PIPELINE_OWNER_EMAIL = os.environ.get("PIPELINE_OWNER_EMAIL", "shridhar.sreeram@gmail.com")
 
@@ -101,6 +102,52 @@ def fetch_jobs_sweden(title, location, results=20):
         return normalized
     except Exception as e:
         print(f"    [warn] Sweden (JobTech) fetch failed: {e}")
+        return []
+
+
+def fetch_jobs_india(title, location, results=10):
+    """Fetch job postings from JSearch API (via RapidAPI) for Indian locations.
+    JSearch aggregates from LinkedIn, Indeed, Glassdoor, Naukri and others
+    via Google for Jobs — much better India coverage than Adzuna alone.
+    Only called when subscriber's location includes Indian cities."""
+    if not JSEARCH_API_KEY:
+        print("    [warn] JSEARCH_API_KEY not set, skipping JSearch India fetch")
+        return []
+
+    query = f"{title} in {location}".strip()
+    try:
+        resp = requests.get(
+            "https://jsearch.p.rapidapi.com/search",
+            headers={
+                "X-RapidAPI-Key": JSEARCH_API_KEY,
+                "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+            },
+            params={
+                "query": query,
+                "page": "1",
+                "num_pages": "1",
+                "country": "in",
+                "language": "en",
+            },
+            timeout=20,
+        )
+        resp.raise_for_status()
+        jobs = resp.json().get("data", [])
+        normalized = []
+        for j in jobs[:results]:
+            normalized.append({
+                "id": f"jsearch-{j.get('job_id', '')}",
+                "title": j.get("job_title", "Untitled role"),
+                "company": {"display_name": j.get("employer_name", "Unknown company")},
+                "location": {"display_name": f"{j.get('job_city', '')} {j.get('job_country', 'India')}".strip()},
+                "description": j.get("job_description", "") or "",
+                "redirect_url": j.get("job_apply_link") or j.get("job_google_link", "#"),
+                "_country": "in",
+                "_source": "JSearch (India)",
+            })
+        return normalized
+    except Exception as e:
+        print(f"    [warn] JSearch India fetch failed: {e}")
         return []
 
 
@@ -440,14 +487,23 @@ def main():
             "helsingborg", "norrköping", "norrkoping", "jönköping",
             "jonkoping", "umeå", "umea", "gävle", "gavle",
         }
+        INDIAN_KEYWORDS = {
+            "india", "bangalore", "bengaluru", "mumbai", "delhi", "new delhi",
+            "hyderabad", "chennai", "pune", "kolkata", "ahmedabad", "noida",
+            "gurugram", "gurgaon", "chandigarh", "jaipur", "kochi", "indore",
+            "coimbatore", "nagpur", "vizag", "visakhapatnam", "surat",
+        }
         locations_lower = {l.lower() for l in locations}
         include_sweden = bool(locations_lower & SWEDISH_KEYWORDS)
+        include_india = bool(locations_lower & INDIAN_KEYWORDS)
 
         try:
             jobs = []
             for title in titles:
                 if include_sweden:
                     jobs += fetch_jobs_sweden(title, combined_location)
+                if include_india:
+                    jobs += fetch_jobs_india(title, combined_location)
                 jobs += fetch_jobs(title, combined_location)
         except Exception as e:
             print(f"  [error] fetch failed for {email}: {e}")
