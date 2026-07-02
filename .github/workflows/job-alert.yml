@@ -35,6 +35,7 @@ jobs:
           ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          JSEARCH_API_KEY: ${{ secrets.JSEARCH_API_KEY }}
           ALERT_FROM_EMAIL: ${{ secrets.ALERT_FROM_EMAIL }}
           PIPELINE_OWNER_EMAIL: ${{ secrets.PIPELINE_OWNER_EMAIL }}
           NEW_SUBSCRIBERS: ${{ steps.sync.outputs.new_subscribers }}
