@@ -367,10 +367,26 @@ def main():
 
         print(f"Checking jobs for {email}: titles={titles} locations={locations}")
 
+        # Only call Sweden's JobTech API if the subscriber's locations
+        # include a Swedish city — avoids surfacing Swedish jobs for
+        # users searching in India, UK, Germany etc.
+        SWEDISH_KEYWORDS = {
+            "sweden", "sverige", "se",
+            "stockholm", "gothenburg", "göteborg", "goteborg",
+            "malmö", "malmo", "malmoe",
+            "uppsala", "karlstad", "linköping", "linkoping",
+            "lund", "örebro", "orebro", "västerås", "vasteras",
+            "helsingborg", "norrköping", "norrkoping", "jönköping",
+            "jonkoping", "umeå", "umea", "gävle", "gavle",
+        }
+        locations_lower = {l.lower() for l in locations}
+        include_sweden = bool(locations_lower & SWEDISH_KEYWORDS)
+
         try:
             jobs = []
             for title in titles:
-                jobs += fetch_jobs_sweden(title, combined_location)
+                if include_sweden:
+                    jobs += fetch_jobs_sweden(title, combined_location)
                 jobs += fetch_jobs(title, combined_location)
         except Exception as e:
             print(f"  [error] fetch failed for {email}: {e}")
