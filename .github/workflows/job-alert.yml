@@ -35,9 +35,9 @@ jobs:
           ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          JSEARCH_API_KEY: ${{ secrets.JSEARCH_API_KEY }}
           ALERT_FROM_EMAIL: ${{ secrets.ALERT_FROM_EMAIL }}
           PIPELINE_OWNER_EMAIL: ${{ secrets.PIPELINE_OWNER_EMAIL }}
+          JSEARCH_API_KEY: ${{ secrets.JSEARCH_API_KEY }}
           NEW_SUBSCRIBERS: ${{ steps.sync.outputs.new_subscribers }}
         run: python AI_project/scripts/run_pipeline.py
       - name: Generate dashboard
@@ -48,6 +48,6 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add AI_project/data/ AI_project/docs/dashboard.html
           git diff --quiet && git diff --staged --quiet || git commit -m "Update job alert data [automated]"
-          git fetch origin
-          git rebase -X theirs origin/main
-          git push
+          git fetch origin main
+          git rebase -X ours origin/main
+          git push --force-with-lease
