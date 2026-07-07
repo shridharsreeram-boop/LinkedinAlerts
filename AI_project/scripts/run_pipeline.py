@@ -120,7 +120,7 @@ def fetch_jobs_india(title, location, results=10):
 
     try:
         resp = requests.get(
-            "https://jsearch.p.rapidapi.com/search",
+            "https://jsearch.p.rapidapi.com/search-v2",
             headers={
                 "X-RapidAPI-Key": JSEARCH_API_KEY,
                 "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
@@ -138,7 +138,7 @@ def fetch_jobs_india(title, location, results=10):
             print("    [warn] JSearch API key invalid or not subscribed — check RapidAPI subscription")
             return []
         resp.raise_for_status()
-        jobs = resp.json().get("data", [])
+        jobs = resp.json().get("data", {}).get("jobs", [])
         normalized = []
         for j in jobs[:results]:
             normalized.append({
