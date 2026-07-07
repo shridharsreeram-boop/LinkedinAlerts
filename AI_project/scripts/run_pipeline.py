@@ -109,53 +109,60 @@ def fetch_jobs_india(title, location, results=10):
     """Fetch job postings from JSearch API (via RapidAPI) for Indian locations.
     JSearch aggregates from LinkedIn, Indeed, Glassdoor, Naukri and others
     via Google for Jobs — much better India coverage than Adzuna alone.
-    Only called when subscriber's location includes Indian cities."""
+    Only called when subscriber's location includes Indian cities.
+    Searches each location separately for better coverage."""
     if not JSEARCH_API_KEY:
         print("    [warn] JSEARCH_API_KEY not set, skipping JSearch India fetch")
         return []
 
-    # Search each location separately for better results
+    # Split locations and search each one separately for better results
     locations_list = [l.strip() for l in location.split() if l.strip()]
-    query = f"{title} {locations_list[0] if locations_list else 'India'}"
+    if not locations_list:
+        locations_list = ["India"]
 
-    try:
-        resp = requests.get(
-            "https://jsearch.p.rapidapi.com/search-v2",
-            headers={
-                "X-RapidAPI-Key": JSEARCH_API_KEY,
-                "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
-                "Content-Type": "application/json",
-            },
-            params={
-                "query": query,
-                "page": "1",
-                "num_pages": "1",
-                "date_posted": "month",
-            },
-            timeout=20,
-        )
-        if resp.status_code == 403:
-            print("    [warn] JSearch API key invalid or not subscribed — check RapidAPI subscription")
-            return []
-        resp.raise_for_status()
-        jobs = resp.json().get("data", {}).get("jobs", [])
-        normalized = []
-        for j in jobs[:results]:
-            normalized.append({
-                "id": f"jsearch-{j.get('job_id', '')}",
-                "title": j.get("job_title", "Untitled role"),
-                "company": {"display_name": j.get("employer_name", "Unknown company")},
-                "location": {"display_name": f"{j.get('job_city', '')} {j.get('job_country', 'India')}".strip()},
-                "description": j.get("job_description", "") or "",
-                "redirect_url": j.get("job_apply_link") or j.get("job_google_link", "#"),
-                "_country": "in",
-                "_source": "JSearch (India)",
-            })
-        print(f"    [info] JSearch returned {len(normalized)} results for '{query}'")
-        return normalized
-    except Exception as e:
-        print(f"    [warn] JSearch India fetch failed: {e}")
-        return []
+    all_results = []
+    for loc in locations_list:
+        query = f"{title} {loc}"
+        try:
+            resp = requests.get(
+                "https://jsearch.p.rapidapi.com/search-v2",
+                headers={
+                    "X-RapidAPI-Key": JSEARCH_API_KEY,
+                    "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+                    "Content-Type": "application/json",
+                },
+                params={
+                    "query": query,
+                    "page": "1",
+                    "num_pages": "1",
+                    "date_posted": "month",
+                },
+                timeout=20,
+            )
+            if resp.status_code == 403:
+                print("    [warn] JSearch API key invalid or not subscribed — check RapidAPI subscription")
+                return []
+            resp.raise_for_status()
+            jobs = resp.json().get("data", {}).get("jobs", [])
+            normalized = []
+            for j in jobs[:results]:
+                normalized.append({
+                    "id": f"jsearch-{j.get('job_id', '')}",
+                    "title": j.get("job_title", "Untitled role"),
+                    "company": {"display_name": j.get("employer_name", "Unknown company")},
+                    "location": {"display_name": f"{j.get('job_city', '')} {j.get('job_country', 'India')}".strip()},
+                    "description": j.get("job_description", "") or "",
+                    "redirect_url": j.get("job_apply_link") or j.get("job_google_link", "#"),
+                    "_country": "in",
+                    "_source": "JSearch (India)",
+                })
+            print(f"    [info] JSearch returned {len(normalized)} results for '{query}'")
+            all_results.extend(normalized)
+            time.sleep(0.3)  # be gentle on rate limits
+        except Exception as e:
+            print(f"    [warn] JSearch India fetch failed for '{query}': {e}")
+
+    return all_results
 
 
 def fetch_jobs(title, location, countries=None, results_per_country=10):
