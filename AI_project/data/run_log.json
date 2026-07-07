@@ -1690,5 +1690,40 @@
         "relevant_jobs_sent": 0
       }
     ]
+  },
+  {
+    "timestamp": "2026-07-07T15:59:01.003435",
+    "results": [
+      {
+        "email": "joracin1996@gmail.com",
+        "status": "sent",
+        "new_jobs_found": 1,
+        "relevant_jobs_sent": 1
+      },
+      {
+        "email": "shridhar.sreeram@gmail.com",
+        "status": "sent",
+        "new_jobs_found": 21,
+        "relevant_jobs_sent": 20
+      },
+      {
+        "email": "rahulgopinath08@gmail.com",
+        "status": "sent",
+        "new_jobs_found": 3,
+        "relevant_jobs_sent": 3
+      },
+      {
+        "email": "sriramsridharcr71997@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0
+      },
+      {
+        "email": "niklas.haugeneset@tieto.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0
+      }
+    ]
   }
 ]
