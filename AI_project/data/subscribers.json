@@ -1,25 +1,5 @@
 [
   {
-    "name": "Robin Jonsson",
-    "email": "sriramsridharcr71997@gmail.com",
-    "job_title": "Project Manager",
-    "location": "Karlstad",
-    "country_code": "",
-    "end_date": "2026-07-11",
-    "signed_up": "2026-06-29",
-    "signup_timestamp": "6/29/2026 13:55:55"
-  },
-  {
-    "name": "Nils",
-    "email": "niklas.haugeneset@tieto.com",
-    "job_title": "IT Manager",
-    "location": "Stockholm",
-    "country_code": "",
-    "end_date": "2026-07-08",
-    "signed_up": "2026-06-29",
-    "signup_timestamp": "7/1/2026 13:38:04"
-  },
-  {
     "name": "Joracin",
     "email": "joracin1996@gmail.com",
     "job_title": "CFD , Thermal , Fluid dynamics, Heat transfer",
