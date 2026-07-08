@@ -798,12 +798,19 @@ def main():
         else:
             status = "no_new_relevant_jobs"
 
+        # Count jobs by source for dashboard reporting
+        source_counts = {}
+        for job, score in relevant_jobs:
+            source = job.get("_source", "Unknown")
+            source_counts[source] = source_counts.get(source, 0) + 1
+
         print(f"  -> {status} ({len(relevant_jobs)} relevant of {len(new_jobs)} new)")
         run_summary["results"].append({
             "email": email,
             "status": status,
             "new_jobs_found": len(new_jobs),
             "relevant_jobs_sent": len(relevant_jobs),
+            "source_counts": source_counts,
         })
 
     # Persist state
