@@ -302,6 +302,108 @@ Respond with ONLY the number, nothing else."""
         return 7
 
 
+def send_welcome_email(to_email, subscriber_name, job_title, location):
+    """Send a welcome email to a new subscriber explaining how the service works."""
+    if not RESEND_API_KEY:
+        return False
+
+    html = f"""<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:32px 16px;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+  <tr><td style="background-color:#1a2332;border-radius:12px 12px 0 0;padding:28px 40px;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td>
+        <div style="font-size:20px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">&#9889; jobpingapp</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:3px;letter-spacing:1px;text-transform:uppercase;">Welcome aboard</div>
+      </td>
+      <td align="right">
+        <span style="background-color:#22c55e;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:#ffffff;">YOU'RE IN</span>
+      </td>
+    </tr></table>
+  </td></tr>
+
+  <tr><td style="background-color:#0f172a;padding:14px 40px;">
+    <p style="margin:0;color:#cbd5e1;font-size:14px;">Hi <strong style="color:#ffffff;">{subscriber_name}</strong> — your job alerts are now active!</p>
+  </td></tr>
+
+  <tr><td style="background-color:#ffffff;padding:28px 40px;">
+    <p style="margin:0 0 20px 0;color:#1a2332;font-size:15px;">Here's what happens next:</p>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
+      <tr>
+        <td width="40" valign="top" style="font-size:20px;">&#128269;</td>
+        <td style="padding-left:12px;">
+          <p style="margin:0;font-size:14px;font-weight:600;color:#1a2332;">We search every 3 hours</p>
+          <p style="margin:4px 0 0 0;font-size:13px;color:#64748b;">We check multiple job sources for <strong>{job_title}</strong> roles in <strong>{location}</strong> — including LinkedIn, Indeed, and local job boards.</p>
+        </td>
+      </tr>
+    </table>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
+      <tr>
+        <td width="40" valign="top" style="font-size:20px;">&#127919;</td>
+        <td style="padding-left:12px;">
+          <p style="margin:0;font-size:14px;font-weight:600;color:#1a2332;">Only relevant matches</p>
+          <p style="margin:4px 0 0 0;font-size:13px;color:#64748b;">We filter out jobs where your keywords only appear in the description — you only get roles where your title is genuinely what they're hiring for.</p>
+        </td>
+      </tr>
+    </table>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+      <tr>
+        <td width="40" valign="top" style="font-size:20px;">&#9993;</td>
+        <td style="padding-left:12px;">
+          <p style="margin:0;font-size:14px;font-weight:600;color:#1a2332;">Email digest when new jobs appear</p>
+          <p style="margin:4px 0 0 0;font-size:13px;color:#64748b;">You'll only get an email when there are genuinely new postings — no email means nothing new was found. Each job card has a direct apply link.</p>
+        </td>
+      </tr>
+    </table>
+
+    <div style="background-color:#f0f9ff;border-radius:8px;border-left:3px solid #0ea5e9;padding:16px 20px;">
+      <p style="margin:0;font-size:13px;color:#0369a1;font-weight:600;">Your alert is set up for:</p>
+      <p style="margin:6px 0 0 0;font-size:13px;color:#475569;">&#128188; <strong>{job_title}</strong></p>
+      <p style="margin:4px 0 0 0;font-size:13px;color:#475569;">&#128205; <strong>{location}</strong></p>
+    </div>
+  </td></tr>
+
+  <tr><td style="background-color:#1a2332;border-radius:0 0 12px 12px;padding:20px 40px;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="font-size:12px;color:#64748b;">You signed up at <span style="color:#94a3b8;font-weight:500;">jobpingapp.xyz</span></td>
+      <td align="right">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdzdAz0mL4Q7NoYWtDWLgICEIIsujieSw7bvy7BEckUjZfF6g/viewform?usp=pp_url&entry.169517527={to_email}"
+           style="font-size:12px;color:#0ea5e9;text-decoration:none;font-weight:500;">Unsubscribe</a>
+      </td>
+    </tr></table>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>"""
+
+    resp = requests.post(
+        "https://api.resend.com/emails",
+        headers={
+            "Authorization": f"Bearer {RESEND_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        json={
+            "from": ALERT_FROM_EMAIL,
+            "to": [to_email],
+            "subject": f"Welcome to jobpingapp — your alerts for {job_title} are live ⚡",
+            "html": html,
+        },
+        timeout=30,
+    )
+    return resp.status_code < 300
+
+
 def send_email(to_email, subscriber_name, jobs, job_title="", location=""):
     """Send a digest email via Resend."""
     if not RESEND_API_KEY:
@@ -424,31 +526,97 @@ def send_email(to_email, subscriber_name, jobs, job_title="", location=""):
 
 
 # ---------- Keyword expansions ----------
-# Maps short keywords/acronyms to their full forms and related terms.
-# When a subscriber searches for "CFD", we also match job titles containing
-# "Computational Fluid Dynamics", "ANSYS", "OpenFOAM" etc.
 KEYWORD_EXPANSIONS = {
+    # Engineering / CFD
     "cfd": ["computational fluid dynamics", "fluid simulation", "ansys", "openfoam",
-            "fluent", "star-ccm", "cfx", "flow simulation", "aerodynamics"],
-    "ai": ["artificial intelligence", "machine learning", "deep learning",
-           "neural network", "llm", "large language model", "generative ai"],
-    "ml": ["machine learning", "deep learning", "artificial intelligence",
-           "neural network", "data science", "predictive modelling"],
+            "fluent", "star-ccm", "cfx", "flow simulation", "aerodynamics",
+            "computational fluid", "fluid mechanics"],
     "fem": ["finite element", "finite element analysis", "fea", "abaqus",
             "nastran", "ansys mechanical", "structural simulation"],
     "fea": ["finite element analysis", "finite element", "fem", "abaqus",
-            "nastran", "structural analysis"],
+            "nastran", "structural analysis", "structural simulation"],
+    "ansys": ["cfd", "finite element", "simulation engineer", "fea", "fluent",
+              "mechanical simulation"],
+    "thermal": ["heat transfer", "thermodynamics", "thermal analysis",
+                "thermal design", "thermal management", "hvac", "cooling"],
     "hvac": ["heating ventilation", "air conditioning", "thermal systems",
-             "building services", "mechanical services"],
+             "building services", "mechanical services", "mep"],
+
+    # AI / ML
+    "ai": ["artificial intelligence", "machine learning", "deep learning",
+           "neural network", "llm", "large language model", "generative ai",
+           "gen ai", "computer vision", "natural language processing"],
+    "ml": ["machine learning", "deep learning", "artificial intelligence",
+           "neural network", "data science", "predictive modelling",
+           "mlops", "model training"],
     "nlp": ["natural language processing", "text mining", "computational linguistics",
-            "language model", "speech recognition"],
+            "language model", "speech recognition", "text analytics"],
     "cv": ["computer vision", "image processing", "object detection",
-           "image recognition", "deep learning vision"],
+           "image recognition", "deep learning vision", "opencv"],
+    "llm": ["large language model", "generative ai", "gpt", "llama",
+            "prompt engineering", "fine tuning", "rag"],
+    "data science": ["machine learning", "data analytics", "statistical modelling",
+                     "python analytics", "data mining", "business intelligence"],
+    "data engineer": ["data pipeline", "etl", "spark", "kafka", "airflow",
+                      "databricks", "snowflake", "data warehouse"],
+
+    # Software / Web
+    "python": ["django", "flask", "fastapi", "data engineering", "python developer",
+               "backend python", "python engineer"],
+    "java": ["spring boot", "microservices java", "j2ee", "backend java",
+             "java developer", "java engineer"],
+    "javascript": ["react", "node.js", "typescript", "frontend", "vue", "angular",
+                   "fullstack javascript"],
+    "react": ["frontend developer", "react developer", "reactjs", "next.js",
+              "frontend engineer", "ui developer"],
     "devops": ["site reliability", "sre", "platform engineering", "cloud infrastructure",
-               "ci/cd", "kubernetes", "docker"],
-    "fullstack": ["full stack", "full-stack", "frontend backend", "web development"],
-    "ios": ["swift", "objective-c", "xcode", "mobile development apple"],
-    "android": ["kotlin", "java mobile", "mobile development android"],
+               "ci/cd", "kubernetes", "docker", "devsecops"],
+    "fullstack": ["full stack", "full-stack", "frontend backend", "web development",
+                  "mern", "mean stack"],
+    "backend": ["api developer", "server side", "microservices", "rest api",
+                "backend engineer", "backend developer"],
+    "cloud": ["aws", "azure", "gcp", "google cloud", "cloud architect",
+              "cloud engineer", "devops cloud"],
+    "aws": ["amazon web services", "cloud engineer", "solutions architect",
+            "cloud infrastructure", "serverless"],
+
+    # Mobile
+    "ios": ["swift", "objective-c", "xcode", "mobile development apple",
+            "ios developer", "ios engineer"],
+    "android": ["kotlin", "java mobile", "mobile development android",
+                "android developer", "android engineer"],
+    "flutter": ["dart", "cross platform mobile", "flutter developer",
+                "mobile developer"],
+
+    # Mechanical / Manufacturing
+    "mechanical engineer": ["mechanical design", "product design", "cad engineer",
+                            "design engineer", "r&d engineer"],
+    "solidworks": ["cad", "mechanical design", "product design", "3d modelling",
+                   "catia", "nx cad"],
+    "embedded": ["firmware", "rtos", "microcontroller", "embedded c",
+                 "embedded systems", "iot firmware", "arm cortex"],
+    "iot": ["internet of things", "embedded systems", "firmware", "connected devices",
+            "edge computing"],
+
+    # Telecom
+    "telecom": ["telecommunications", "5g", "lte", "network engineer",
+                "rf engineer", "wireless engineer"],
+    "5g": ["telecommunications", "lte", "nr", "radio access network",
+           "ran engineer", "wireless"],
+
+    # Management / Scrum
+    "scrum master": ["agile coach", "agile master", "sprint planning",
+                     "scrum", "agile delivery"],
+    "project manager": ["programme manager", "delivery manager", "project lead",
+                        "project coordinator", "pmo"],
+    "product manager": ["product owner", "product lead", "product development",
+                        "product strategy"],
+
+    # Data / Analytics
+    "sql": ["database developer", "data analyst", "business intelligence",
+            "mysql", "postgresql", "data warehouse"],
+    "power bi": ["business intelligence", "data visualisation", "tableau",
+                 "reporting analyst", "bi developer"],
 }
 
 
@@ -474,12 +642,29 @@ def main():
     active_subscribers = []
     run_summary = {"timestamp": datetime.datetime.utcnow().isoformat(), "results": []}
 
+    new_subscriber_emails = set()
+    if os.environ.get("NEW_SUBSCRIBERS", "0") != "0":
+        # Collect emails of subscribers who just joined this run
+        for sub in active_subscribers:
+            if sub.get("signup_timestamp") and sub.get("signed_up") == datetime.date.today().isoformat():
+                new_subscriber_emails.add(sub.get("email"))
+
     for sub in subscribers:
         email = sub.get("email")
         if is_expired(sub):
             print(f"Skipping expired subscriber: {email}")
             continue
         active_subscribers.append(sub)
+
+        # Send expiry warning 3 days before subscription ends
+        end_date = sub.get("end_date")
+        if end_date:
+            days_left = (datetime.date.fromisoformat(end_date) - datetime.date.today()).days
+            if days_left == 3:
+                _send_expiry_warning(email, sub.get("name", "there"), title_raw, location_raw, end_date)
+                print(f"  [info] Expiry warning sent to {email} (expires {end_date})")
+            send_welcome_email(email, sub.get("name", "there"), title_raw, location_raw)
+            print(f"  [info] Welcome email sent to {email}")
 
         title_raw = sub.get("job_title", "")
         location_raw = sub.get("location", "")
@@ -537,6 +722,26 @@ def main():
         if merged_count:
             print(f"  [info] merged {merged_count} job(s) found on multiple sources")
 
+        # Filter out stale listings older than 30 days
+        # Adzuna sometimes returns old listings that are no longer active
+        cutoff_date = datetime.date.today() - datetime.timedelta(days=30)
+        fresh_jobs = []
+        stale_count = 0
+        for job in jobs:
+            created = job.get("created")
+            if created:
+                try:
+                    job_date = datetime.date.fromisoformat(created[:10])
+                    if job_date < cutoff_date:
+                        stale_count += 1
+                        continue
+                except Exception:
+                    pass
+            fresh_jobs.append(job)
+        if stale_count > 0:
+            print(f"  [info] filtered out {stale_count} stale listing(s) older than 30 days")
+        jobs = fresh_jobs
+
         # Title-strict filtering with keyword expansions:
         # Match job titles against both the original keywords AND their
         # expanded forms (e.g. CFD → "Computational Fluid Dynamics", "ANSYS")
@@ -586,6 +791,10 @@ def main():
         if relevant_jobs:
             sent = send_email(email, sub.get("name", "there"), relevant_jobs, title_raw, location_raw)
             status = "sent" if sent else "email_failed"
+        elif email in new_subscriber_emails:
+            # New subscriber but no jobs found yet — send a friendly holding email
+            _send_no_jobs_yet_email(email, sub.get("name", "there"), title_raw, location_raw)
+            status = "no_jobs_yet_email_sent"
         else:
             status = "no_new_relevant_jobs"
 
@@ -611,6 +820,136 @@ def main():
                      if r.get("status") in ("fetch_error", "email_failed")]
     if error_results:
         _send_error_alert(error_results)
+
+
+def _send_no_jobs_yet_email(to_email, name, job_title, location):
+    """Send a friendly email to new subscribers when no matching jobs are found yet."""
+    if not RESEND_API_KEY:
+        return
+    try:
+        requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {RESEND_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "from": ALERT_FROM_EMAIL,
+                "to": [to_email],
+                "subject": f"Your jobpingapp alerts are set up — watching for {job_title} roles ⚡",
+                "html": f"""<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:32px 16px;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+  <tr><td style="background-color:#1a2332;border-radius:12px 12px 0 0;padding:28px 40px;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td>
+        <div style="font-size:20px;font-weight:700;color:#ffffff;">&#9889; jobpingapp</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:3px;letter-spacing:1px;text-transform:uppercase;">Watching for your roles</div>
+      </td>
+      <td align="right">
+        <span style="background-color:#f59e0b;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:#ffffff;">SCANNING</span>
+      </td>
+    </tr></table>
+  </td></tr>
+
+  <tr><td style="background-color:#0f172a;padding:14px 40px;">
+    <p style="margin:0;color:#cbd5e1;font-size:14px;">Hi <strong style="color:#ffffff;">{name}</strong> — we're on it.</p>
+  </td></tr>
+
+  <tr><td style="background-color:#ffffff;padding:32px 40px;">
+    <p style="margin:0 0 20px 0;font-size:15px;color:#1a2332;">We just searched for <strong>{job_title}</strong> roles in <strong>{location}</strong> and didn't find any new matches right now.</p>
+    <p style="margin:0 0 28px 0;font-size:14px;color:#64748b;">That's completely normal — job boards update constantly. We'll check again in 3 hours and email you the moment something relevant appears.</p>
+
+    <div style="background-color:#f8fafc;border-radius:12px;padding:24px 28px;border-left:4px solid #0ea5e9;margin-bottom:24px;">
+      <p style="margin:0 0 8px 0;font-size:22px;color:#1a2332;">&#8220;</p>
+      <p style="margin:0 0 12px 0;font-size:15px;color:#334155;font-style:italic;line-height:1.6;">The secret of getting ahead is getting started. The right opportunity is already out there — we'll find it for you.</p>
+      <p style="margin:0;font-size:13px;color:#94a3b8;">— Mark Twain</p>
+    </div>
+
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="background-color:#f0f9ff;border-radius:8px;padding:16px 20px;">
+          <p style="margin:0;font-size:13px;color:#0369a1;font-weight:600;">Your alert is active for:</p>
+          <p style="margin:6px 0 0 0;font-size:13px;color:#475569;">&#128188; <strong>{job_title}</strong></p>
+          <p style="margin:4px 0 0 0;font-size:13px;color:#475569;">&#128205; <strong>{location}</strong></p>
+          <p style="margin:8px 0 0 0;font-size:12px;color:#64748b;">Checking every 3 hours across LinkedIn, Indeed, local job boards and more.</p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+
+  <tr><td style="background-color:#1a2332;border-radius:0 0 12px 12px;padding:20px 40px;">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="font-size:12px;color:#64748b;">You signed up at <span style="color:#94a3b8;font-weight:500;">jobpingapp.xyz</span></td>
+      <td align="right">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdzdAz0mL4Q7NoYWtDWLgICEIIsujieSw7bvy7BEckUjZfF6g/viewform?usp=pp_url&entry.169517527={to_email}"
+           style="font-size:12px;color:#0ea5e9;text-decoration:none;font-weight:500;">Unsubscribe</a>
+      </td>
+    </tr></table>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>""",
+            },
+            timeout=30,
+        )
+    except Exception as e:
+        print(f"  [warn] No-jobs-yet email send failed: {e}")
+
+
+def _send_expiry_warning(to_email, name, job_title, location, end_date):
+    """Send a warning email 3 days before a subscription expires."""
+    if not RESEND_API_KEY:
+        return
+    signup_url = "https://jobpingapp.xyz"
+    try:
+        requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {RESEND_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "from": ALERT_FROM_EMAIL,
+                "to": [to_email],
+                "subject": f"⏰ Your jobpingapp alerts expire in 3 days",
+                "html": f"""<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:32px 16px;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;">
+  <tr><td style="background-color:#1a2332;padding:24px 40px;">
+    <div style="font-size:20px;font-weight:700;color:#ffffff;">&#9889; jobpingapp</div>
+  </td></tr>
+  <tr><td style="padding:32px 40px;">
+    <p style="margin:0 0 16px 0;font-size:16px;color:#1a2332;">Hi <strong>{name}</strong>,</p>
+    <p style="margin:0 0 16px 0;font-size:14px;color:#475569;">Your job alerts for <strong>{job_title}</strong> in <strong>{location}</strong> will expire on <strong>{end_date}</strong> — that's in 3 days.</p>
+    <p style="margin:0 0 24px 0;font-size:14px;color:#475569;">If you'd like to keep receiving alerts, sign up again below:</p>
+    <a href="{signup_url}" style="display:inline-block;background-color:#0ea5e9;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:6px;font-size:14px;font-weight:600;">Renew my alerts →</a>
+  </td></tr>
+  <tr><td style="background-color:#f8fafc;padding:16px 40px;border-top:1px solid #e2e8f0;">
+    <p style="margin:0;font-size:12px;color:#94a3b8;">jobpingapp.xyz — automated job alerts</p>
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>""",
+            },
+            timeout=30,
+        )
+    except Exception as e:
+        print(f"  [warn] Expiry warning send failed: {e}")
 
 
 def _send_error_alert(errors):
