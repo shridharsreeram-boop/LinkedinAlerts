@@ -1882,5 +1882,33 @@
         "source_counts": {}
       }
     ]
+  },
+  {
+    "timestamp": "2026-07-08T17:12:55.576380",
+    "results": [
+      {
+        "email": "joracin1996@gmail.com",
+        "status": "sent",
+        "new_jobs_found": 4,
+        "relevant_jobs_sent": 4,
+        "source_counts": {
+          "JSearch (India)": 4
+        }
+      },
+      {
+        "email": "shridhar.sreeram@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "rahulgopinath08@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      }
+    ]
   }
 ]
