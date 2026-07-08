@@ -656,6 +656,9 @@ def main():
             continue
         active_subscribers.append(sub)
 
+        title_raw = sub.get("job_title", "")
+        location_raw = sub.get("location", "")
+
         # Send expiry warning 3 days before subscription ends
         end_date = sub.get("end_date")
         if end_date:
@@ -663,11 +666,11 @@ def main():
             if days_left == 3:
                 _send_expiry_warning(email, sub.get("name", "there"), title_raw, location_raw, end_date)
                 print(f"  [info] Expiry warning sent to {email} (expires {end_date})")
+
+        # Send welcome email if this is a new subscriber
+        if email in new_subscriber_emails:
             send_welcome_email(email, sub.get("name", "there"), title_raw, location_raw)
             print(f"  [info] Welcome email sent to {email}")
-
-        title_raw = sub.get("job_title", "")
-        location_raw = sub.get("location", "")
 
         # Support comma-separated job titles and locations
         # Each title is searched with all locations combined as context
