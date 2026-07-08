@@ -28,25 +28,5 @@
     "end_date": "2026-07-28",
     "signed_up": "2026-07-06",
     "signup_timestamp": "7/6/2026 9:20:17"
-  },
-  {
-    "name": "Robin Jonsson",
-    "email": "sriramsridharcr71997@gmail.com",
-    "job_title": "Project Manager",
-    "location": "Karlstad",
-    "country_code": "",
-    "end_date": "2026-07-12",
-    "signed_up": "2026-07-07",
-    "signup_timestamp": "6/29/2026 13:55:55"
-  },
-  {
-    "name": "Nils",
-    "email": "niklas.haugeneset@tieto.com",
-    "job_title": "IT Manager",
-    "location": "Stockholm",
-    "country_code": "",
-    "end_date": "2026-07-09",
-    "signed_up": "2026-07-07",
-    "signup_timestamp": "7/1/2026 13:38:04"
   }
 ]
