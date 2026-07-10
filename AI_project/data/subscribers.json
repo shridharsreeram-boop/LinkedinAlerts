@@ -28,5 +28,25 @@
     "end_date": "2026-07-30",
     "signed_up": "2026-07-06",
     "signup_timestamp": "7/6/2026 9:20:17"
+  },
+  {
+    "name": "Mithun",
+    "email": "tejamithun@gmail.com",
+    "job_title": "AI Engineer",
+    "location": "Stockholm",
+    "country_code": "",
+    "end_date": "2026-10-18",
+    "signed_up": "2026-07-10",
+    "signup_timestamp": "7/10/2026 14:26:09"
+  },
+  {
+    "name": "Mithun",
+    "email": "peddakalvamithun@gmail.com",
+    "job_title": "AI Engineer",
+    "location": "Stockholm",
+    "country_code": "",
+    "end_date": "2026-10-18",
+    "signed_up": "2026-07-10",
+    "signup_timestamp": "7/10/2026 14:27:31"
   }
 ]
