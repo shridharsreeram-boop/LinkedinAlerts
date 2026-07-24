@@ -1,22 +1,5 @@
 [
   {
-    "timestamp": "2026-07-01T10:48:15.701935",
-    "results": [
-      {
-        "email": "sriramsridharcr71997@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0
-      },
-      {
-        "email": "niklas.haugeneset@tieto.com",
-        "status": "sent",
-        "new_jobs_found": 24,
-        "relevant_jobs_sent": 24
-      }
-    ]
-  },
-  {
     "timestamp": "2026-07-01T10:58:18.562560",
     "results": [
       {
@@ -3512,6 +3495,48 @@
         "new_jobs_found": 0,
         "relevant_jobs_sent": 0,
         "source_counts": {}
+      },
+      {
+        "email": "tejamithun@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "peddakalvamithun@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-24T08:27:44.044036",
+    "results": [
+      {
+        "email": "joracin1996@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "shridhar.sreeram@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "rahulgopinath08@gmail.com",
+        "status": "sent",
+        "new_jobs_found": 2,
+        "relevant_jobs_sent": 2,
+        "source_counts": {
+          "JobTech (Sweden)": 2
+        }
       },
       {
         "email": "tejamithun@gmail.com",
