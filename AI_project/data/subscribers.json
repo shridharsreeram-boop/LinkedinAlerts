@@ -48,5 +48,15 @@
     "end_date": "2026-11-01",
     "signed_up": "2026-07-10",
     "signup_timestamp": "7/10/2026 14:27:31"
+  },
+  {
+    "name": "Bo Wang",
+    "email": "jordan.wangse@gmail.com",
+    "job_title": "software engineer",
+    "location": "Gothenburg",
+    "country_code": "",
+    "end_date": "2026-11-01",
+    "signed_up": "2026-07-24",
+    "signup_timestamp": "7/24/2026 14:42:05"
   }
 ]
