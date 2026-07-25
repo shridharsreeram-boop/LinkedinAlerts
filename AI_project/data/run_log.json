@@ -1,34 +1,5 @@
 [
   {
-    "timestamp": "2026-07-02T11:08:11.080746",
-    "results": [
-      {
-        "email": "sriramsridharcr71997@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0
-      },
-      {
-        "email": "niklas.haugeneset@tieto.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0
-      },
-      {
-        "email": "shridhar.sreeram@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0
-      },
-      {
-        "email": "joracin1996@gmail.com",
-        "status": "sent",
-        "new_jobs_found": 90,
-        "relevant_jobs_sent": 20
-      }
-    ]
-  },
-  {
     "timestamp": "2026-07-02T11:17:29.752600",
     "results": [
       {
@@ -3714,6 +3685,53 @@
   },
   {
     "timestamp": "2026-07-25T08:06:32.984062",
+    "results": [
+      {
+        "email": "joracin1996@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "shridhar.sreeram@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "rahulgopinath08@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "tejamithun@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "peddakalvamithun@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "jordan.wangse@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-25T10:27:22.745707",
     "results": [
       {
         "email": "joracin1996@gmail.com",
