@@ -693,6 +693,8 @@ def main():
             "lund", "örebro", "orebro", "västerås", "vasteras",
             "helsingborg", "norrköping", "norrkoping", "jönköping",
             "jonkoping", "umeå", "umea", "gävle", "gavle",
+            "sundsvall", "borås", "boras", "eskilstuna", "halmstad",
+            "växjö", "vaxjo", "trollhättan", "trollhattan",
         }
         INDIAN_KEYWORDS = {
             "india", "bangalore", "bengaluru", "mumbai", "delhi", "new delhi",
@@ -752,12 +754,17 @@ def main():
 
         def title_matches(job):
             job_title_lower = (job.get("title") or "").lower()
-            return any(kw in job_title_lower for kw in expanded_keywords)
+            # Also check first 300 chars of description — catches Swedish-titled
+            # jobs that describe themselves in English (e.g. "Mjukvaruutvecklare"
+            # with description mentioning "software development", "C++", "embedded")
+            job_desc_snippet = (job.get("description") or "")[:300].lower()
+            return any(kw in job_title_lower or kw in job_desc_snippet
+                       for kw in expanded_keywords)
 
         title_matched = [j for j in jobs if title_matches(j)]
         title_filtered_out = len(jobs) - len(title_matched)
         if title_filtered_out > 0:
-            print(f"  [info] filtered out {title_filtered_out} job(s) where keyword only appeared in description")
+            print(f"  [info] filtered out {title_filtered_out} job(s) where keyword not in title or description snippet")
 
         # Cross-keyword dedup: if the same job matched multiple keyword
         # searches (e.g. appears in both "CFD" and "Fluid dynamics" results),
