@@ -1,52 +1,5 @@
 [
   {
-    "timestamp": "2026-07-27T02:55:59.604307",
-    "results": [
-      {
-        "email": "joracin1996@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "shridhar.sreeram@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "rahulgopinath08@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "tejamithun@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "peddakalvamithun@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "jordan.wangse@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      }
-    ]
-  },
-  {
     "timestamp": "2026-07-27T06:32:54.287416",
     "results": [
       {
@@ -5244,6 +5197,53 @@
   },
   {
     "timestamp": "2026-08-09T04:17:47.035330",
+    "results": [
+      {
+        "email": "joracin1996@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "shridhar.sreeram@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "rahulgopinath08@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "tejamithun@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "peddakalvamithun@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "jordan.wangse@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-09T06:56:24.762481",
     "results": [
       {
         "email": "joracin1996@gmail.com",
