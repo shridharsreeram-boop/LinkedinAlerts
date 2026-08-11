@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -49,5 +51,5 @@ jobs:
           git add AI_project/data/ AI_project/docs/dashboard.html
           git diff --quiet && git diff --staged --quiet || git commit -m "Update job alert data [automated]"
           git fetch origin main
-          git rebase -X ours origin/main
-          git push --force-with-lease
+          git rebase -X ours origin/main || git rebase --abort
+          git push --force
