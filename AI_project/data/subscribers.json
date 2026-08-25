@@ -58,5 +58,15 @@
     "end_date": "2026-12-03",
     "signed_up": "2026-07-24",
     "signup_timestamp": "7/24/2026 14:42:05"
+  },
+  {
+    "name": "Laoa",
+    "email": "Laos99@outlook.com",
+    "job_title": "AI Engineer, C developer, Python Developer",
+    "location": "Karlstad, Gothenburg, Stockholm",
+    "country_code": "",
+    "end_date": "2027-08-25",
+    "signed_up": "2026-08-25",
+    "signup_timestamp": "8/25/2026 18:03:44"
   }
 ]
