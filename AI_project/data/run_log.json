@@ -1,59 +1,5 @@
 [
   {
-    "timestamp": "2026-09-10T22:56:53.661563",
-    "results": [
-      {
-        "email": "shridhar.sreeram@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "rahulgopinath08@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "tejamithun@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "peddakalvamithun@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "jordan.wangse@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "Laos99@outlook.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "Laoa99@outlook.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      }
-    ]
-  },
-  {
     "timestamp": "2026-09-11T03:20:13.359877",
     "results": [
       {
@@ -5395,6 +5341,60 @@
   },
   {
     "timestamp": "2026-10-03T11:12:12.997261",
+    "results": [
+      {
+        "email": "shridhar.sreeram@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "rahulgopinath08@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "tejamithun@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "peddakalvamithun@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "jordan.wangse@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "Laos99@outlook.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "Laoa99@outlook.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-10-03T15:49:32.174933",
     "results": [
       {
         "email": "shridhar.sreeram@gmail.com",
