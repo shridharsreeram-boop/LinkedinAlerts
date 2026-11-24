@@ -1,59 +1,5 @@
 [
   {
-    "timestamp": "2026-10-24T10:23:45.459490",
-    "results": [
-      {
-        "email": "shridhar.sreeram@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "rahulgopinath08@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "tejamithun@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "peddakalvamithun@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "jordan.wangse@gmail.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "Laos99@outlook.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      },
-      {
-        "email": "Laoa99@outlook.com",
-        "status": "no_new_relevant_jobs",
-        "new_jobs_found": 0,
-        "relevant_jobs_sent": 0,
-        "source_counts": {}
-      }
-    ]
-  },
-  {
     "timestamp": "2026-10-24T15:29:06.926389",
     "results": [
       {
@@ -5469,6 +5415,72 @@
         "new_jobs_found": 0,
         "relevant_jobs_sent": 0,
         "source_counts": {}
+      },
+      {
+        "email": "jordan.wangse@gmail.com",
+        "status": "no_new_relevant_jobs",
+        "new_jobs_found": 0,
+        "relevant_jobs_sent": 0,
+        "source_counts": {}
+      },
+      {
+        "email": "Laos99@outlook.com",
+        "status": "sent",
+        "new_jobs_found": 1,
+        "relevant_jobs_sent": 1,
+        "source_counts": {
+          "JobTech (Sweden)": 1
+        }
+      },
+      {
+        "email": "Laoa99@outlook.com",
+        "status": "sent",
+        "new_jobs_found": 1,
+        "relevant_jobs_sent": 1,
+        "source_counts": {
+          "JobTech (Sweden)": 1
+        }
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-11-24T19:58:42.639335",
+    "results": [
+      {
+        "email": "shridhar.sreeram@gmail.com",
+        "status": "sent",
+        "new_jobs_found": 5,
+        "relevant_jobs_sent": 5,
+        "source_counts": {
+          "JobTech (Sweden)": 5
+        }
+      },
+      {
+        "email": "rahulgopinath08@gmail.com",
+        "status": "sent",
+        "new_jobs_found": 1,
+        "relevant_jobs_sent": 1,
+        "source_counts": {
+          "JobTech (Sweden)": 1
+        }
+      },
+      {
+        "email": "tejamithun@gmail.com",
+        "status": "sent",
+        "new_jobs_found": 1,
+        "relevant_jobs_sent": 1,
+        "source_counts": {
+          "JobTech (Sweden)": 1
+        }
+      },
+      {
+        "email": "peddakalvamithun@gmail.com",
+        "status": "sent",
+        "new_jobs_found": 1,
+        "relevant_jobs_sent": 1,
+        "source_counts": {
+          "JobTech (Sweden)": 1
+        }
       },
       {
         "email": "jordan.wangse@gmail.com",
